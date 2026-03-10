@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boat - Wikipedia</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Linux+Libertine&family=Georgia&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Linux Libertine', Georgia, 'Times New Roman', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #202122;
+    background: #f8f9fa;
+    overflow-x: hidden;
+  }
+
+  /* === WIKIPEDIA CHROME === */
+  .wiki-header {
+    background: #fff;
+    border-bottom: 1px solid #a7d7f9;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .wiki-logo {
+    width: 50px; height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    filter: grayscale(1);
+  }
+  .wiki-wordmark {
+    font-size: 18px;
+    font-family: 'Linux Libertine', serif;
+    letter-spacing: -0.5px;
+  }
+  .wiki-wordmark small { font-size: 11px; color: #54595d; display: block; font-style: italic; }
+
+  .wiki-search {
+    margin-left: auto;
+    display: flex; gap: 4px;
+  }
+  .wiki-search input {
+    border: 1px solid #a2a9b1;
+    padding: 4px 8px;
+    font-size: 13px;
+    width: 220px;
+    border-radius: 2px;
+  }
+  .wiki-search button {
+    background: #f8f9fa;
+    border: 1px solid #a2a9b1;
+    padding: 4px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+
+  .wiki-tabs {
+    background: #fff;
+    border-bottom: 1px solid #a7d7f9;
+    padding: 0 20px;
+    display: flex;
+    gap: 0;
+  }
+  .wiki-tab {
+    padding: 6px 14px;
+    font-size: 12.5px;
+    color: #0645ad;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  .wiki-tab.active {
+    background: #fff;
+    border-bottom: 2px solid #36c;
+    color: #202122;
+    font-weight: bold;
+  }
+
+  .wiki-body {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+  }
+
+  .wiki-sidebar {
+    width: 180px;
+    min-width: 180px;
+    background: #f8f9fa;
+    border-right: 1px solid #eaecf0;
+    padding: 12px;
+    font-size: 12px;
+  }
+  .wiki-sidebar h3 {
+    font-size: 12px;
+    color: #54595d;
+    margin: 12px 0 4px;
+    font-weight: normal;
+  }
+  .wiki-sidebar a {
+    display: block;
+    color: #0645ad;
+    text-decoration: none;
+    padding: 2px 0;
+    font-size: 12px;
+  }
+
+  .wiki-content {
+    flex: 1;
+    padding: 20px 30px 200px;
+    max-width: 960px;
+  }
+
+  .wiki-content h1 {
+    font-family: 'Linux Libertine', serif;
+    font-size: 28px;
+    font-weight: normal;
+    border-bottom: 1px solid #a2a9b1;
+    padding-bottom: 4px;
+    margin-bottom: 12px;
+  }
+
+  .wiki-content h2 {
+    font-family: 'Linux Libertine', serif;
+    font-size: 22px;
+    font-weight: normal;
+    border-bottom: 1px solid #eaecf0;
+    padding-bottom: 2px;
+    margin: 28px 0 12px;
+  }
+
+  .wiki-content h3 {
+    font-size: 17px;
+    font-weight: bold;
+    margin: 20px 0 8px;
+  }
+
+  .wiki-content p {
+    margin-bottom: 10px;
+    text-align: justify;
+  }
+
+  .wiki-content a {
+    color: #0645ad;
+    text-decoration: none;
+  }
+  .wiki-content a:hover { text-decoration: underline; }
+
+  .wiki-notice {
+    background: #f8eaba;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .infobox {
+    float: right;
+    width: 280px;
+    margin: 0 0 16px 20px;
+    border: 1px solid #a2a9b1;
+    background: #f8f9fa;
+    font-size: 12.5px;
+    border-spacing: 0;
+  }
+  .infobox caption {
+    background: #cee0f2;
+    padding: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+  }
+  .infobox-image {
+    text-align: center;
+    padding: 8px;
+    background: #f8f9fa;
+  }
+  .infobox-image img {
+    max-width: 260px;
+    height: auto;
+  }
+  .infobox-image .caption {
+    font-size: 11px;
+    color: #54595d;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .infobox td, .infobox th {
+    padding: 4px 8px;
+    border-top: 1px solid #eaecf0;
+    vertical-align: top;
+    text-align: left;
+  }
+  .infobox th {
+    background: #e8eaed;
+    font-weight: normal;
+    width: 100px;
+  }
+
+  .toc {
+    background: #f8f9fa;
+    border: 1px solid #a2a9b1;
+    padding: 10px 16px;
+    display: inline-block;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+  .toc-title {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin: 2px 0; }
+  .toc a { color: #0645ad; text-decoration: none; }
+
+  sup.reference {
+    font-size: 10px;
+    color: #0645ad;
+    cursor: pointer;
+  }
+
+  .reflist {
+    font-size: 12px;
+    column-count: 2;
+    column-gap: 20px;
+  }
+  .reflist ol { padding-left: 20px; }
+  .reflist li { margin-bottom: 4px; }
+
+  /* === THE HAIR === */
+  .the-hair {
+    position: fixed;
+    top: 38%;
+    left: 62%;
+    z-index: 9999;
+    pointer-events: none;
+    width: 180px;
+    height: 300px;
+    transform: rotate(12deg);
+  }
+
+  /* === FALLING LETTER === */
+  .falling-letter {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
+    font-family: 'Linux Libertine', serif;
+    transition: none;
+  }
+
+  /* === BSOD === */
+  .bsod-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #0078d7;
+    z-index: 99999;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10% 15%;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: #fff;
+    cursor: none;
+    user-select: none;
+  }
+  .bsod-overlay.active {
+    display: flex;
+  }
+  .bsod-frown {
+    font-size: 120px;
+    font-weight: 100;
+    margin-bottom: 20px;
+  }
+  .bsod-title {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .bsod-text {
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 700px;
+  }
+  .bsod-percent {
+    margin-top: 30px;
+    font-size: 16px;
+  }
+  .bsod-qr {
+    position: absolute;
+    bottom: 12%;
+    left: 15%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .bsod-qr-box {
+    width: 80px;
+    height: 80px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+  }
+  .bsod-qr-box svg { width: 100%; height: 100%; }
+
+  /* hide scrollbar during BSOD */
+  body.bsod-active {
+    overflow: hidden !important;
+  }
+
+  /* Pulsing subtle effect on the hair for realism */
+  .the-hair svg {
+    filter: drop-shadow(0 0 0.5px rgba(0,0,0,0.15));
+  }
+
+  .edit-bracket {
+    color: #54595d;
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: 8px;
+  }
+
+  .hatnote {
+    font-style: italic;
+    padding-left: 20px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #54595d;
+  }
+
+  /* Categories footer */
+  .categories {
+    margin-top: 40px;
+    padding-top: 10px;
+    border-top: 1px solid #a2a9b1;
+    font-size: 12px;
+  }
+  .categories span { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<!-- ====== THE HAIR (fixed on screen) ====== -->
+<div class="the-hair">
+  <svg viewBox="0 0 180 300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="hairBlur">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="0.3"/>
+      </filter>
+    </defs>
+    <path d="
+      M 85 8
+      C 83 20, 89 35, 82 55
+      C 76 75, 92 85, 86 105
+      C 80 125, 88 140, 83 160
+      C 78 180, 91 195, 85 215
+      C 79 235, 87 250, 82 270
+      C 79 282, 84 290, 81 298
+    " stroke="#1a1008" stroke-width="0.8" fill="none" opacity="0.7" filter="url(#hairBlur)"
+      stroke-linecap="round"/>
+    <path d="
+      M 86 10
+      C 84 22, 90 36, 83 57
+      C 77 77, 93 87, 87 107
+      C 81 127, 89 141, 84 162
+      C 79 182, 92 196, 86 216
+      C 80 236, 88 251, 83 271
+      C 80 283, 85 291, 82 299
+    " stroke="#2a1c0a" stroke-width="0.4" fill="none" opacity="0.45" filter="url(#hairBlur)"
+      stroke-linecap="round"/>
+  </svg>
+</div>
+
+<!-- ====== BSOD ====== -->
+<div class="bsod-overlay" id="bsod">
+  <div class="bsod-frown">:(</div>
+  <div class="bsod-title">Your PC ran into a problem and needs to restart.</div>
+  <div class="bsod-text">
+    We're just collecting some error info, and then we'll restart for you.
+  </div>
+  <div class="bsod-percent"><span id="bsod-pct">0</span>% complete</div>
+  <div class="bsod-qr">
+    <div class="bsod-qr-box">
+      <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+        <rect width="21" height="21" fill="white"/>
+        <g fill="black">
+          <rect x="0" y="0" width="7" height="1"/><rect x="0" y="1" width="1" height="5"/><rect x="6" y="1" width="1" height="5"/>
+          <rect x="0" y="6" width="7" height="1"/><rect x="2" y="2" width="3" height="3"/>
+          <rect x="14" y="0" width="7" height="1"/><rect x="14" y="1" width="1" height="5"/><rect x="20" y="1" width="1" height="5"/>
+          <rect x="14" y="6" width="7" height="1"/><rect x="16" y="2" width="3" height="3"/>
+          <rect x="0" y="14" width="7" height="1"/><rect x="0" y="15" width="1" height="5"/><rect x="6" y="15" width="1" height="5"/>
+          <rect x="0" y="20" width="7" height="1"/><rect x="2" y="16" width="3" height="3"/>
+          <rect x="8" y="0" width="1" height="1"/><rect x="10" y="0" width="1" height="1"/>
+          <rect x="9" y="2" width="1" height="1"/><rect x="11" y="3" width="1" height="1"/>
+          <rect x="8" y="4" width="2" height="1"/><rect x="12" y="5" width="1" height="1"/>
+          <rect x="8" y="8" width="1" height="1"/><rect x="10" y="8" width="3" height="1"/>
+          <rect x="14" y="8" width="1" height="1"/><rect x="16" y="9" width="2" height="1"/>
+          <rect x="9" y="10" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/>
+          <rect x="8" y="12" width="1" height="1"/><rect x="10" y="11" width="2" height="1"/>
+          <rect x="14" y="10" width="1" height="2"/><rect x="18" y="10" width="1" height="1"/>
+          <rect x="9" y="13" width="1" height="1"/><rect x="12" y="13" width="2" height="1"/>
+          <rect x="8" y="14" width="1" height="1"/><rect x="10" y="15" width="1" height="1"/>
+          <rect x="14" y="14" width="2" height="1"/><rect x="18" y="14" width="1" height="1"/>
+          <rect x="9" y="16" width="1" height="1"/><rect x="11" y="17" width="1" height="1"/>
+          <rect x="15" y="16" width="1" height="1"/><rect x="17" y="16" width="2" height="1"/>
+          <rect x="14" y="18" width="1" height="1"/><rect x="16" y="19" width="1" height="1"/>
+          <rect x="19" y="18" width="2" height="1"/><rect x="18" y="20" width="1" height="1"/>
+        </g>
+      </svg>
+    </div>
+    <div>
+      For more information about this issue and possible fixes,<br>
+      visit https://www.windows.com/stopcode<br><br>
+      If you call a support person, give them this info:<br>
+      Stop code: BOAT_OVERFLOW_EXCEPTION
+    </div>
+  </div>
+</div>
+
+<!-- ====== WIKIPEDIA HEADER ====== -->
+<div class="wiki-header">
+  <div class="wiki-logo">🌐</div>
+  <div class="wiki-wordmark">
+    Wikipedia
+    <small>The Free Encyclopedia</small>
+  </div>
+  <div class="wiki-search">
+    <input type="text" placeholder="Search Wikipedia" value="Boat">
+    <button>Search</button>
+  </div>
+</div>
+<div class="wiki-tabs">
+  <div class="wiki-tab active">Article</div>
+  <div class="wiki-tab">Talk</div>
+  <div class="wiki-tab">Read</div>
+  <div class="wiki-tab">Edit</div>
+  <div class="wiki-tab">View history</div>
+</div>
+
+<!-- ====== BODY ====== -->
+<div class="wiki-body">
+  <div class="wiki-sidebar">
+    <h3>Navigation</h3>
+    <a href="#">Main page</a>
+    <a href="#">Contents</a>
+    <a href="#">Current events</a>
+    <a href="#">Random article</a>
+    <a href="#">About Wikipedia</a>
+    <a href="#">Contact us</a>
+    <a href="#">Donate</a>
+    <h3>Contribute</h3>
+    <a href="#">Help</a>
+    <a href="#">Learn to edit</a>
+    <a href="#">Community portal</a>
+    <a href="#">Recent changes</a>
+    <a href="#">Upload file</a>
+    <h3>Tools</h3>
+    <a href="#">What links here</a>
+    <a href="#">Related changes</a>
+    <a href="#">Special pages</a>
+    <a href="#">Permanent link</a>
+    <a href="#">Page information</a>
+    <h3>Languages</h3>
+    <a href="#">Deutsch</a>
+    <a href="#">Español</a>
+    <a href="#">Français</a>
+    <a href="#">中文</a>
+    <a href="#">日本語</a>
+    <a href="#">العربية</a>
+  </div>
+
+  <div class="wiki-content" id="article">
+    <h1>Boat</h1>
+
+    <div class="wiki-notice">
+      ⚠️ This article needs additional citations for verification. <i>Please help <a href="#">improve this article</a> by adding citations to reliable sources.</i> <span style="font-size:11px; color:#72777d;">(March 2026)</span>
+    </div>
+
+    <div class="hatnote">For other uses, see <a href="#">Boat (disambiguation)</a>. Not to be confused with <a href="#">Ship</a>, <a href="#">Canoe</a>, or <a href="#">Large wet thing that floats</a>.</div>
+
+    <table class="infobox">
+      <caption>Boat</caption>
+      <tr>
+        <td class="infobox-image" colspan="2">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg" style="max-width:260px">
+            <rect width="260" height="160" fill="#dbe8f0"/>
+            <ellipse cx="130" cy="145" rx="110" ry="8" fill="#6b9dbf" opacity="0.4"/>
+            <path d="M 40 120 L 60 80 L 200 80 L 220 120 Z" fill="#8B4513"/>
+            <path d="M 35 120 Q 130 140 225 120" fill="#6b3a1f"/>
+            <line x1="130" y1="80" x2="130" y2="25" stroke="#333" stroke-width="2"/>
+            <polygon points="132,28 132,70 190,55" fill="#eee" stroke="#ccc" stroke-width="0.5"/>
+            <path d="M 20 135 Q 65 125, 110 135 Q 155 145, 200 135 Q 235 128, 250 135" fill="none" stroke="#6b9dbf" stroke-width="1.5" opacity="0.6"/>
+            <path d="M 10 140 Q 55 130, 100 140 Q 145 150, 190 140 Q 225 133, 260 140" fill="none" stroke="#6b9dbf" stroke-width="1" opacity="0.4"/>
+          </svg>
+          <div class="caption">An artist's impression of a boat (circa forever)</div>
+        </td>
+      </tr>
+      <tr><th>Type</th><td>Watercraft</td></tr>
+      <tr><th>Used for</th><td>Floating, mostly</td></tr>
+      <tr><th>Inventor</th><td>Unclear, probably someone wet</td></tr>
+      <tr><th>First built</th><td>A long time ago</td></tr>
+      <tr><th>Related</th><td><a href="#">Ship</a>, <a href="#">Raft</a>, <a href="#">Kayak</a>, <a href="#">Regret</a></td></tr>
+    </table>
+
+    <div class="toc">
+      <div class="toc-title">Contents</div>
+      <ol>
+        <li><a href="#history">History</a></li>
+        <li><a href="#types">Types of boats</a></li>
+        <li><a href="#construction">Construction and materials</a></li>
+        <li><a href="#propulsion">Propulsion</a></li>
+        <li><a href="#terminology">Nautical terminology</a></li>
+        <li><a href="#cultural">Cultural significance</a></li>
+        <li><a href="#modern">Modern developments</a></li>
+        <li><a href="#see-also">See also</a></li>
+        <li><a href="#references">References</a></li>
+      </ol>
+    </div>
+
+    <p>A <b>boat</b> is a <a href="#">watercraft</a> of a large range of types and sizes, but generally smaller than a <a href="#">ship</a>, which is distinguished by its larger size, shape, cargo or passenger capacity, or its ability to carry boats. A boat is something that floats on water and doesn't immediately sink, which, when you think about it, is actually quite impressive.<sup class="reference">[1]</sup></p>
+
+    <p>Small boats are typically found on inland <a href="#">waterways</a> such as rivers and lakes, or in protected coastal areas. However, some boats, such as the <a href="#">whaleboat</a>, were intended for use in an offshore environment. In modern naval terms, a boat is a vessel small enough to be carried aboard a ship.<sup class="reference">[2]</sup> The word "boat" comes from the Old English <i>bāt</i>, which itself came from someone pointing at a boat and going "that."<sup class="reference">[3]</sup></p>
+
+    <h2 id="history">History <span class="edit-bracket">[<a href="#">edit</a>]</span></h2>
+
+    <p>The earliest known boats date back to the <a href="#">Neolithic period</a>, approximately 10,000 years ago. These primitive vessels were essentially hollowed-out tree trunks, known as <a href="#">dugout canoes</a>. One can imagine the first human to sit in a floating log thinking "this is fine" moments before discovering the concept of capsizing.<sup class="reference">[4]</sup></p>
+
+    <p>The oldest recovered boat in the world is the <a href="#">Pesse canoe</a>, a dugout made from a hollowed-out tree trunk found in the Netherlands. It has been dated to around 8000 BCE, making it older than the concept of weekends, taxes, and every building on Earth.<sup class="reference">[5]</sup></p>
+
+    <p>Ancient <a href="#">Egyptians</a> are known to have used boats made of <a href="#">papyrus</a> reeds as early as 4000 BCE for fishing and transportation along the <a href="#">Nile River</a>. These reed boats were surprisingly durable, though one imagines the insurance premiums on a paper boat were astronomical.<sup class="reference">[6]</sup></p>
+
+    <p>The <a href="#">Phoenicians</a> and <a href="#">Greeks</a> advanced boat building considerably, developing the <a href="#">trireme</a> — a vessel with three rows of oars on each side. This was essentially the ancient world's equivalent of adding more cylinders to an engine, which is to say: elegant, expensive, and prone to going horribly wrong in a storm.<sup class="reference">[7]</sup></p>
+
+    <p>During the <a href="#">Age of Exploration</a> (15th–17th centuries), European nations developed increasingly sophisticated sailing vessels. The <a href="#">caravel</a> and <a href="#">carrack</a> enabled long-distance ocean voyages, which led to the discovery that the world was, in fact, considerably more annoying to traverse than previously assumed.<sup class="reference">[8]</sup></p>
+
+    <h2 id="types">Types of boats <span class="edit-bracket">[<a href="#">edit</a>]</span></h2>
+
+    <p>Boats can be categorized by their method of propulsion, their purpose, or by how much their owners talk about them at dinner parties. The main categories include:</p>
+
+    <h3>Unpowered / human-powered</h3>
+    <p><a href="#">Canoes</a> and <a href="#">kayaks</a> are among the oldest and most widespread boat types, propelled by <a href="#">paddles</a>. <a href="#">Rowing boats</a> use <a href="#">oars</a> mounted in <a href="#">oarlocks</a> and are propelled by the occupant's gradual realization that this is much harder than it looks on television.<sup class="reference">[9]</sup></p>
+
+    <p><a href="#">Gondolas</a>, famously associated with the canals of <a href="#">Venice</a>, are propelled by a single oarsman (the <a href="#">gondolier</a>) who stands at the stern. Gondoliers are legally required to look dramatically wistful at all times.<sup class="reference">[10]</sup></p>
+
+    <h3>Sailboats</h3>
+    <p><a href="#">Sailboats</a> are propelled primarily by means of <a href="#">sails</a>. The physics of sailing are well-understood and involve the interaction of wind with the sail to create <a href="#">lift</a> and <a href="#">drag</a> forces. However, the act of actually sailing remains deeply mystifying to most people, who will invariably pull the wrong rope at the worst possible moment.<sup class="reference">[11]</sup></p>
+
+    <p>Types of sailboats include the <a href="#">sloop</a>, <a href="#">cutter</a>, <a href="#">ketch</a>, <a href="#">yawl</a>, and <a href="#">schooner</a>. These names sound made up but are, against all odds, real.<sup class="reference">[12]</sup></p>
+
+    <h3>Motorboats</h3>
+    <p>A <a href="#">motorboat</a> or <a href="#">powerboat</a> is a boat propelled by an <a href="#">engine</a>. The first motorboat was built in 1886 by <a href="#">Gottlieb Daimler</a>, presumably because someone looked at a perfectly good sailboat and thought "but what if it was louder."<sup class="reference">[13]</sup></p>
+
+    <h2 id="construction">Construction and materials <span class="edit-bracket">[<a href="#">edit</a>]</span></h2>
+
+    <p>Throughout history, boats have been constructed from a wide variety of materials. The most common construction materials include <a href="#">wood</a>, <a href="#">fiberglass</a>, <a href="#">aluminium</a>, and <a href="#">steel</a>. Some experimental boats have been made from <a href="#">concrete</a>, which sounds like a terrible idea until you realize it actually works, which somehow makes it worse.<sup class="reference">[14]</sup></p>
+
+    <p><a href="#">Wooden boat</a> construction is the oldest method, using techniques such as <a href="#">clinker</a> (overlapping planks) and <a href="#">carvel</a> (flush planks). The choice between these methods was traditionally settled by lengthy arguments in shipyards that would make modern internet comment sections seem civil.<sup class="reference">[15]</sup></p>
+
+    <p>Modern recreational boats are most commonly made of <a href="#">fiberglass</a>, a material that is lightweight, strong, and gives off an aroma during construction that can only be described as "aggressively chemical." The <a href="#">hull</a> is typically formed by laying glass fiber fabric into a mould and applying <a href="#">polyester resin</a>.<sup class="reference">[16]</sup></p>
+
+    <h2 id="propulsion">Propulsion <span class="edit-bracket">[<a href="#">edit</a>]</span></h2>
+
+    <p>The means of propulsion available to boats fall into several broad categories: human power, wind, and mechanical engines. A fourth category, "hoping the current takes you somewhere useful," is not officially recognized but remains widely practiced.<sup class="reference">[17]</sup></p>
+
+    <p>The development of the <a href="#">steam engine</a> in the 18th century revolutionized boat propulsion. <a href="#">Robert Fulton</a> is often credited with building the first commercially successful <a href="#">steamboat</a>, the <i>North River Steamboat</i> (often called the <i>Clermont</i>), which made its maiden voyage in 1807. Critics of the time described it as "loud" and "on fire," both of which were accurate.<sup class="reference">[18]</sup></p>
+
+    <p>Modern boats may use <a href="#">outboard motors</a>, <a href="#">inboard motors</a>, <a href="#">jet drives</a>, or <a href="#">pod drives</a>. <a href="#">Electric propulsion</a> is an emerging technology in boating, driven by environmental concerns and the fundamental human desire to glide silently up on unsuspecting ducks.<sup class="reference">[19]</sup></p>
+
+    <h2 id="terminology">Nautical terminology <span class="edit-bracket">[<a href="#">edit</a>]</span></h2>
+
+    <p>Boating has developed an extensive specialized vocabulary, much of which exists solely to make newcomers feel stupid. Key terms include:<sup class="reference">[20]</sup></p>
+
+    <p><b>Bow</b> – the front of the boat, which is the part that hits things first. <b>Stern</b> – the back of the boat, which is the part you watch the thing you hit recede from. <b>Port</b> – the left side when facing forward, named after the side of the ship that traditionally faced the port (this is one of the few nautical terms that actually makes sense). <b>Starboard</b> – the right side, derived from the Old English <i>stēorbord</i>, meaning "the side you steer from," which is to say, the side that doesn't face the port, which means port is actually defined by starboard, which means neither is defined at all.<sup class="reference">[21]</sup></p>
+
+    <p><b>Draft</b> refers to the depth of water a boat needs to float, which is crucial information for anyone who has ever tried to take a sailboat through a parking lot. <b>Beam</b> is the width of a boat at its widest point. <b>Freeboard</b> is the distance from the waterline to the deck, and is inversely proportional to how much cargo you've loaded and how much you've been lying to yourself about it.<sup class="reference">[22]</sup></p>
+
+    <h2 id="cultural">Cultural significance <span class="edit-bracket">[<a href="#">edit</a>]</span></h2>
+
+    <p>Boats have held enormous cultural significance throughout human history. In <a href="#">Norse mythology</a>, the god <a href="#">Freyr</a> owned <a href="#">Skíðblaðnir</a>, a ship that could be folded up and put in a pocket — essentially a 10th-century folding bicycle, but for water.<sup class="reference">[23]</sup></p>
+
+    <p>The boat has served as a powerful <a href="#">metaphor</a> across cultures. Expressions such as "don't rock the boat," "we're all in the same boat," and "whatever floats your boat" demonstrate the degree to which boats have permeated common language. Linguists estimate that approximately 14% of all English idioms involve boats or water, a figure that rises to 100% if you are talking to a boat owner.<sup class="reference">[24]</sup></p>
+
+    <p>In literature, boats feature prominently in works from <a href="#">Homer</a>'s <i>Odyssey</i> to <a href="#">Ernest Hemingway</a>'s <i>The Old Man and the Sea</i> to <a href="#">Moby-Dick</a>, in which a man's obsession with a whale is really an allegory for the futility of human ambition — or possibly just a story about a man who really hated a specific whale. Scholars continue to debate this.<sup class="reference">[25]</sup></p>
+
+    <h2 id="modern">Modern developments <span class="edit-bracket">[<a href="#">edit</a>]</span></h2>
+
+    <p>The 21st century has seen significant innovation in boat design and technology. <a href="#">Autonomous boats</a> are being developed for applications ranging from cargo transport to environmental monitoring. In 2022, the <a href="#">Mayflower Autonomous Ship</a> successfully crossed the Atlantic Ocean without a human crew, proving that boats don't need us and arguably never did.<sup class="reference">[26]</sup></p>
+
+    <p><a href="#">Hydrofoil</a> technology, which lifts the hull above the water on underwater wings, has seen renewed interest in recent years. Modern electric hydrofoil boats can achieve remarkable efficiency by reducing water resistance, giving the impression that the boat is flying — an experience that is exhilarating for approximately four seconds before the passenger remembers that boats are not supposed to fly.<sup class="reference">[27]</sup></p>
+
+    <p><a href="#">Solar-powered boats</a> have also gained traction, with the <a href="#">MS Tûranor PlanetSolar</a> completing the first circumnavigation of the globe powered entirely by solar energy in 2012. The boat averaged a speed of approximately 5 knots, meaning the journey took 584 days, which is a long time to be on a boat but presumably less stressful than worrying about fuel.<sup class="reference">[28]</sup></p>
+
+    <p>The <a href="#">recreational boating</a> industry continues to be a significant economic force. In the United States alone, the boating industry contributes over $170 billion annually to the economy, a figure that includes boat sales, maintenance, marina fees, and the untold billions spent on accessories that seemed essential at the boat show but have never left the garage.<sup class="reference">[29]</sup></p>
+
+    <h2 id="see-also">See also <span class="edit-bracket">[<a href="#">edit</a>]</span></h2>
+    <p>
+      <a href="#">Ship</a> · <a href="#">Yacht</a> · <a href="#">Canoe</a> · <a href="#">Sailing</a> · <a href="#">Maritime history</a> · <a href="#">Naval architecture</a> · <a href="#">Regret (emotion)</a> · <a href="#">Sunk cost fallacy</a> · <a href="#">List of boats that were fine</a>
+    </p>
+
+    <h2 id="references">References <span class="edit-bracket">[<a href="#">edit</a>]</span></h2>
+    <div class="reflist">
+      <ol>
+        <li>McGrail, Seán (2001). <i>Boats of the World: From the Stone Age to Medieval Times</i>. Oxford University Press. p. 12.</li>
+        <li>Lavery, Brian (2004). <i>Ship: 5000 Years of Maritime Adventure</i>. DK Publishing. pp. 18–22.</li>
+        <li>[<i>citation needed</i>]</li>
+        <li>Johnstone, Paul (1980). <i>The Seacraft of Prehistory</i>. Harvard University Press. pp. 40–48.</li>
+        <li>Peeters, H. et al. (2009). "A Mesolithic dugout canoe from the Netherlands." <i>Antiquity</i>, 83(321), pp. 23–29.</li>
+        <li>Ward, Cheryl (2000). <i>Sacred and Secular: Ancient Egyptian Ships and Boats</i>. Archaeological Institute of America.</li>
+        <li>Morrison, J.S.; Coates, J.F. (1996). <i>Greek and Roman Oared Warships</i>. Oxbow Books. pp. 112–130.</li>
+        <li>Parry, J.H. (1981). <i>The Discovery of the Sea</i>. University of California Press. pp. 68–92.</li>
+        <li>Adney, Edwin; Chapelle, Howard (1964). <i>The Bark Canoes and Skin Boats of North America</i>. Smithsonian Institution.</li>
+        <li>Sommella, Anna (2003). <i>La Gondola</i>. Canal & Stamperia Editrice. p. 45. [<i>translated excerpt</i>]</li>
+        <li>Marchaj, C.A. (2003). <i>Sail Performance: Techniques to Maximise Sail Power</i>. Adlard Coles Nautical. pp. 8–14.</li>
+        <li>Kemp, Peter, ed. (1976). <i>The Oxford Companion to Ships and the Sea</i>. Oxford University Press.</li>
+        <li>Gutsche, Friedrich (1975). <i>Geschichte der Motorboote</i>. Hinstorff Verlag. pp. 3–7.</li>
+        <li>Morgan, R.G. (1994). "Concrete boats — an overview." <i>Concrete International</i>, 16(5), pp. 34–38.</li>
+        <li>Greenhill, Basil (1976). <i>Archaeology of the Boat</i>. Adam & Charles Black. pp. 155–175.</li>
+        <li>Scott, Robert J. (1996). <i>Fiberglass Boat Design and Construction</i>. SNAME. pp. 22–45.</li>
+        <li>[<i>original research?</i>]</li>
+        <li>Sale, Kirkpatrick (2001). <i>The Fire of His Genius: Robert Fulton and the American Dream</i>. Free Press. pp. 110–115.</li>
+        <li>Rand, Casey (2019). "The quiet revolution: Electric boats and the future of waterways." <i>Marine Technology Reporter</i>, Sept. 2019.</li>
+        <li>Jett, Stephen C. (2017). <i>Ancient Ocean Crossings</i>. University of Alabama Press. Glossary, pp. 310–315.</li>
+        <li>King, Dean (2000). <i>A Sea of Words: A Lexicon of Nautical Terms</i>. Henry Holt and Company. pp. 1–20.</li>
+        <li>Casson, Lionel (1994). <i>Ships and Seafaring in Ancient Times</i>. University of Texas Press. p. 88.</li>
+        <li>Simek, Rudolf (2007). <i>Dictionary of Northern Mythology</i>. D.S. Brewer. p. 290.</li>
+        <li>Jeans, Peter D. (2004). <i>Ship to Shore: A Dictionary of Everyday Words and Phrases Derived from the Sea</i>. ABC-CLIO.</li>
+        <li>Parker, Hershel (1996). <i>Herman Melville: A Biography</i>. Johns Hopkins University Press. Vol. 2, pp. 40–42.</li>
+        <li>Battista, Brett (2022). "Mayflower Autonomous Ship completes Atlantic crossing." <i>IEEE Spectrum</i>, July 2022.</li>
+        <li>Elkaim, Gabriel (2020). "Hydrofoils: Past, present, and future." <i>Journal of Ocean Engineering</i>, 45(2), pp. 200–215.</li>
+        <li>"PlanetSolar completes first solar-powered circumnavigation." <i>The Guardian</i>, 4 May 2012.</li>
+        <li>National Marine Manufacturers Association (2023). <i>2023 U.S. Recreational Boating Statistical Abstract</i>.</li>
+      </ol>
+    </div>
+
+    <div class="categories">
+      <span>Categories:</span>
+      <a href="#">Boats</a> · <a href="#">Watercraft</a> · <a href="#">Nautical terminology</a> · <a href="#">Water transport</a> · <a href="#">Things that float</a> · <a href="#">Regrettable purchases</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ===========================
+  // FALLING LETTERS ENGINE
+  // ===========================
+  const article = document.getElementById('article');
+  const allTextNodes = [];
+  let bsodTriggered = false;
+  let lettersFalling = [];
+  let scrollThreshold = 400; // px before letters start falling
+  let bsodThreshold = 0;
+  let totalCharsAvailable = 0;
+
+  // Walk the DOM to find all text nodes inside article
+  function collectTextNodes(node) {
+    if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+      allTextNodes.push(node);
+    } else {
+      for (let child of node.childNodes) {
+        // skip TOC and infobox for stability
+        if (child.classList && (child.classList.contains('toc') || child.classList.contains('infobox') || child.classList.contains('wiki-notice'))) continue;
+        collectTextNodes(child);
+      }
+    }
+  }
+  collectTextNodes(article);
+
+  // Wrap every character in a span
+  const charSpans = [];
+  allTextNodes.forEach(textNode => {
+    const text = textNode.textContent;
+    const parent = textNode.parentNode;
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < text.length; i++) {
+      const span = document.createElement('span');
+      span.textContent = text[i];
+      span.style.display = 'inline';
+      span.style.position = 'relative';
+      span.dataset.fallen = 'false';
+      fragment.appendChild(span);
+      if (text[i].trim()) {
+        charSpans.push(span);
+      }
+    }
+    parent.replaceChild(fragment, textNode);
+  });
+
+  totalCharsAvailable = charSpans.length;
+  bsodThreshold = document.body.scrollHeight * 0.72;
+
+  // Shuffle function
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // Create a shuffled index list so letters fall randomly
+  const shuffledIndices = shuffle([...Array(charSpans.length).keys()]);
+  let fallenCount = 0;
+
+  function dropLetter(span) {
+    if (span.dataset.fallen === 'true') return;
+    span.dataset.fallen = 'true';
+
+    const rect = span.getBoundingClientRect();
+    const x = rect.left + window.scrollX;
+    const y = rect.top + window.scrollY;
+    const char = span.textContent;
+    const computedStyle = window.getComputedStyle(span);
+
+    // Make original invisible
+    span.style.visibility = 'hidden';
+
+    // Create falling clone
+    const clone = document.createElement('div');
+    clone.className = 'falling-letter';
+    clone.textContent = char;
+    clone.style.left = rect.left + 'px';
+    clone.style.top = rect.top + 'px';
+    clone.style.fontSize = computedStyle.fontSize;
+    clone.style.fontWeight = computedStyle.fontWeight;
+    clone.style.fontStyle = computedStyle.fontStyle;
+    clone.style.color = computedStyle.color;
+    document.body.appendChild(clone);
+
+    // Physics
+    const vx = (Math.random() - 0.5) * 3;
+    let vy = 1 + Math.random() * 2;
+    const gravity = 0.15 + Math.random() * 0.1;
+    const spin = (Math.random() - 0.5) * 8;
+    let angle = 0;
+    let cx = rect.left;
+    let cy = rect.top;
+    let opacity = 1;
+
+    function animate() {
+      vy += gravity;
+      cx += vx;
+      cy += vy;
+      angle += spin;
+      
+      if (cy > window.innerHeight + 50) {
+        clone.remove();
+        return;
+      }
+      
+      clone.style.left = cx + 'px';
+      clone.style.top = cy + 'px';
+      clone.style.transform = `rotate(${angle}deg)`;
+      
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+  }
+
+  // Track scroll
+  let lastScroll = 0;
+  window.addEventListener('scroll', function() {
+    if (bsodTriggered) return;
+
+    const scrollY = window.scrollY;
+    const scrollDelta = scrollY - lastScroll;
+    
+    if (scrollY > scrollThreshold && scrollDelta > 0) {
+      // Calculate how many letters should have fallen based on scroll position
+      const progress = (scrollY - scrollThreshold) / (bsodThreshold - scrollThreshold);
+      const targetFallen = Math.min(
+        Math.floor(progress * totalCharsAvailable * 0.6),
+        charSpans.length
+      );
+      
+      // Drop letters to catch up
+      const batch = Math.min(targetFallen - fallenCount, 15); // max 15 per frame
+      for (let i = 0; i < batch && fallenCount < charSpans.length; i++) {
+        dropLetter(charSpans[shuffledIndices[fallenCount]]);
+        fallenCount++;
+      }
+    }
+
+    // BSOD trigger
+    if (scrollY > bsodThreshold && !bsodTriggered) {
+      triggerBSOD();
+    }
+
+    lastScroll = scrollY;
+  });
+
+  // ===========================
+  // BSOD
+  // ===========================
+  function triggerBSOD() {
+    bsodTriggered = true;
+    const bsod = document.getElementById('bsod');
+    bsod.classList.add('active');
+    document.body.classList.add('bsod-active');
+
+    // Try fullscreen
+    try {
+      const el = document.documentElement;
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if (el.msRequestFullscreen) el.msRequestFullscreen();
+    } catch(e) {}
+
+    // Animate percentage
+    let pct = 0;
+    const pctEl = document.getElementById('bsod-pct');
+    function tickPct() {
+      if (pct >= 100) {
+        // After reaching 100%, wait then "restart"
+        setTimeout(() => {
+          bsod.classList.remove('active');
+          document.body.classList.remove('bsod-active');
+          if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+          window.scrollTo(0, 0);
+          bsodTriggered = false;
+          // Reset fallen letters
+          charSpans.forEach(s => {
+            s.style.visibility = 'visible';
+            s.dataset.fallen = 'false';
+          });
+          fallenCount = 0;
+          // Re-shuffle
+          shuffle(shuffledIndices);
+          // Remove any lingering falling clones
+          document.querySelectorAll('.falling-letter').forEach(el => el.remove());
+        }, 3000);
+        return;
+      }
+      // Erratic progress
+      const jump = pct < 30 ? Math.random() * 3 : 
+                   pct < 70 ? Math.random() * 1.5 : 
+                   Math.random() * 4;
+      pct = Math.min(100, pct + jump);
+      pctEl.textContent = Math.floor(pct);
+      const delay = pct < 30 ? 200 + Math.random() * 400 :
+                    pct < 70 ? 500 + Math.random() * 1500 :
+                    150 + Math.random() * 300;
+      setTimeout(tickPct, delay);
+    }
+    setTimeout(tickPct, 800);
+  }
+
+  // Escape from BSOD with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && bsodTriggered) {
+      const bsod = document.getElementById('bsod');
+      bsod.classList.remove('active');
+      document.body.classList.remove('bsod-active');
+      window.scrollTo(0, 0);
+      bsodTriggered = false;
+      charSpans.forEach(s => {
+        s.style.visibility = 'visible';
+        s.dataset.fallen = 'false';
+      });
+      fallenCount = 0;
+      shuffle(shuffledIndices);
+      document.querySelectorAll('.falling-letter').forEach(el => el.remove());
+    }
+  });
+})();
+</script>
+</body>
+</html>
