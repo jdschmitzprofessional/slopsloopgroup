@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instructional Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1a1610;
+      --paper:      #f5f0e8;
+      --cream:      #ede7d9;
+      --accent:     #b5470b;
+      --accent-lt:  #e8c4a8;
+      --muted:      #7a6f62;
+      --rule:       #c8bfb0;
+      --col-w:      720px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.75;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    header {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 3.5rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 18px,
+        rgba(255,255,255,0.03) 18px,
+        rgba(255,255,255,0.03) 19px
+      );
+    }
+    .header-eyebrow {
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-lt);
+      margin-bottom: 1rem;
+    }
+    header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      max-width: 780px;
+      margin: 0 auto 1.25rem;
+    }
+    .header-subtitle {
+      font-size: 1.05rem;
+      color: rgba(245,240,232,0.7);
+      max-width: 540px;
+      margin: 0 auto 2rem;
+      font-style: italic;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      color: rgba(245,240,232,0.5);
+      text-transform: uppercase;
+    }
+    .header-meta span { display: flex; align-items: center; gap: 0.4rem; }
+    .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--rule); }
+
+    /* ── PROGRESS BAR ────────────────────────────────────── */
+    #progress-bar {
+      position: fixed; top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: var(--accent);
+      z-index: 100;
+      transition: width 0.1s linear;
+    }
+
+    /* ── TABLE OF CONTENTS ───────────────────────────────── */
+    .toc-wrapper {
+      max-width: var(--col-w);
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+    .toc {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--accent);
+      padding: 1.75rem 2rem;
+    }
+    .toc h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .toc ol {
+      padding-left: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .toc li { font-size: 0.95rem; }
+    .toc a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .toc a:hover { color: var(--accent); border-color: var(--accent-lt); }
+
+    /* ── MAIN CONTENT ────────────────────────────────────── */
+    main {
+      max-width: var(--col-w);
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    /* ── SECTION ─────────────────────────────────────────── */
+    .guide-section {
+      margin-bottom: 4.5rem;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .guide-section.visible { opacity: 1; transform: translateY(0); }
+
+    .section-number {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .guide-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .guide-section p { margin-bottom: 1.2rem; color: #2e2920; }
+
+    /* ── IMAGE BLOCK ─────────────────────────────────────── */
+    .img-block {
+      margin: 2.25rem 0;
+      background: var(--cream);
+      border: 1px solid var(--rule);
+    }
+    .img-block img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      background: #ddd;
+    }
+    .img-placeholder {
+      width: 100%;
+      height: 320px;
+      background: linear-gradient(135deg, #dbd3c4 0%, #c8bfaf 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--muted);
+    }
+    .img-placeholder svg { opacity: 0.4; }
+    .img-placeholder span { font-size: 0.85rem; letter-spacing: 0.08em; }
+    .img-caption {
+      padding: 0.65rem 1rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+      border-top: 1px solid var(--rule);
+    }
+
+    /* ── SIDE-BY-SIDE IMAGE GRID ─────────────────────────── */
+    .img-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2.25rem 0;
+    }
+    .img-grid .img-block { margin: 0; }
+    .img-grid .img-placeholder { height: 200px; }
+
+    /* ── CALLOUT / TIP BOX ───────────────────────────────── */
+    .callout {
+      margin: 2rem 0;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .callout.tip    { background: #eef5ee; border-left: 4px solid #4a8c4a; }
+    .callout.warn   { background: #fdf3e7; border-left: 4px solid #c97a1a; }
+    .callout.info   { background: #e8f0f8; border-left: 4px solid #3a6fa8; }
+    .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .callout-body { font-size: 0.95rem; line-height: 1.6; }
+    .callout-body strong { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* ── STEP LIST ───────────────────────────────────────── */
+    .steps { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; margin: 1.75rem 0; }
+    .steps li {
+      display: grid;
+      grid-template-columns: 2.25rem 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    .step-num {
+      width: 2.25rem; height: 2.25rem;
+      background: var(--ink); color: var(--paper);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+    .step-content strong { display: block; margin-bottom: 0.25rem; font-size: 1rem; }
+    .step-content p { margin: 0; font-size: 0.95rem; color: var(--muted); }
+
+    /* ── DIVIDER ─────────────────────────────────────────── */
+    .divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 3.5rem 0;
+      color: var(--rule);
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--rule);
+    }
+    .divider-symbol { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--accent); }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: rgba(245,240,232,0.5);
+      text-align: center;
+      padding: 2.5rem 2rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+    }
+    footer a { color: var(--accent-lt); text-decoration: none; }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .img-grid { grid-template-columns: 1fr; }
+      .header-meta { flex-direction: column; gap: 0.5rem; }
+      .dot { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ═══════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════ -->
+<header>
+  <p class="header-eyebrow">Complete Guide · 2025</p>
+  <h1>Expressing Discontent or Discomfort</h1>
+  <p class="header-subtitle">A Guide for the Modern, Working Adult</p>
+  <div class="header-meta">
+    <span>⏱ 10 min read</span>
+    <div class="dot"></div>
+    <span>Beginner–Intermediate</span>
+    <div class="dot"></div>
+    <span>Last updated March, 2026</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     TABLE OF CONTENTS
+════════════════════════════════════════════ -->
+<div class="toc-wrapper">
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#section-1">Introduction &amp; Overview</a></li>
+      <li><a href="#section-2">What You'll Need</a></li>
+      <li><a href="#section-3">Step-by-Step Instructions</a></li>
+      <li><a href="#section-4">Make Your Own </a></li>
+    </ol>
+  </nav>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════ -->
+<main>
+
+  <!-- SECTION 1 — Introduction -->
+  <section class="guide-section" id="section-1">
+    <p class="section-number">Section 01</p>
+    <h2>Introduction &amp; Overview</h2>
+    <p>
+      This guide outlines a convenient and free way to express discontent in the modern era.
+    </p>
+    <p>
+      My name is Leonardo Millet Grillmaster2.0 and I have used this method for years to express discontent with myself, coworkers, policies and more. I stand by it, and you will, too, once you see its effectiveness!
+    </p>
+  </section>
+
+  <div class="divider"><span class="divider-symbol">❧</span></div>
+
+  <!-- SECTION 2 — Prerequisites -->
+  <section class="guide-section" id="section-2">
+    <p class="section-number">Section 02</p>
+    <h2>What You'll Need</h2>
+    <p>
+      Only a handful of components are required for this guide, making it an ideal activity for adults and children alike!
+    </p>
+
+    <ul class="steps">
+      <li>
+        <div class="step-num">A</div>
+        <div class="step-content">
+          <strong>Postage for a Small Parcel</strong>
+          <p>(optional if delivery is not necessary)</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">B</div>
+        <div class="step-content">
+          <strong>A Mid-Sized or Larger Envelope or Box</strong>
+          <p>Improvisation is encouraged!</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">C</div>
+        <div class="step-content">
+          <strong>A Dead Bird</strong>
+          <p>Species of bird only matters if you need to match it to a parcel size.</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-body">
+        <strong>Note</strong>
+        If you cannot source a dead bird, see section 4 on how to make your own
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span class="divider-symbol">❧</span></div>
+
+  <!-- SECTION 3 — Step-by-Step -->
+  <section class="guide-section" id="section-3">
+    <p class="section-number">Section 03</p>
+    <h2>Step-by-Step Instructions</h2>
+    <p>
+      Follow the below steps to find satisfaction through expression!
+    </p>
+
+    <ol class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>Step 1: Find Required Components</strong>
+          <p>The first step is to acquire the requisite components to complete this process. You can try checking in or around trees, at your local retailers and the US postal service offices depending on the components needed.</p>
+        </div>
+      </li>
+      <img src="png/dead_bird_acquisition_2.jpg" alt="Lorem Ipsum">
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>Step 2: Combine Required Components</strong>
+          <p>Deposit your bird into an envelope or box large enough to contain it. Ensure it is tightly sealed, preferrably air-tight!</p>
+        </div>
+      </li>
+      <img src="png/dead_bird_assembly_1.jpg" alt="Lorem Ipsum">
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>Step 3: Arranging Delivery</strong>
+          <p>Using your recursive hand deposit the parcel into a nearby mailbox. Ensure you provided the correct address and proper postage!</p>
+        </div>
+      </li>
+            <img src="png/dead_bird_assembly_2.png" alt="Lorem Ipsum">
+      <li>
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>Step 4: Relax!</strong>
+          <p>At this point your discontent has been adequately expressed! Don't you feel better? If not, feel free to repeat these steps as many times as necessary.</p>
+        </div>
+      </li>
+      <img src="png/dead_bird_assembly_3.png" alt="Lorem Ipsum">
+    </ol>
+
+    <div class="callout tip">
+      <span class="callout-icon">✅</span>
+      <div class="callout-body">
+        <strong>Pro Tip</strong>
+        If you intend to deliver the parcel yourself, there is no need to pay for postage!
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span class="divider-symbol">❧</span></div>
+
+  <!-- SECTION 4 — Visual Walkthrough -->
+  <section class="guide-section" id="section-4">
+    <p class="section-number">Section 04</p>
+    <h2>Making Your Own Dead Bird(s)</h2>
+    <p>
+      If you are unable to source a dead bird and only have access to live avians, feel free to consult the below infograpic for details on how to manufacture your own, parcel-suitable fowl.
+    </p>
+    <img src="png/dead_bird_acquisition_1.jpg" alt="Lorem Ipsum">
+    <p>
+      It is important to remember that live birds do not follow the same rules as their deceased counterparts, namely gravity. Ensure that you do not simply "drop" the bird, as it will not achieve the requisite velocity for this guide and may, in fact, accelerate in an entirely incorrect direction. Instead, open your hand while making a swift, downward motion while holding the bird as shown.
+    </p>
+  </section>
+
+  <div class="divider"><span class="divider-symbol">❧</span></div>
+
+
+</main>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer>
+  <p>© 2026 Leonardo Millet Grillmaster2.0 · <a href="#">Contact</a> · <a href="#">All Guides</a></p>
+</footer>
+
+<script>
+  // ── Reading progress bar ──────────────────────────────
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (scrolled / total * 100) + '%';
+  });
+
+  // ── Scroll-reveal for sections ────────────────────────
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll('.guide-section').forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
