@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$BLOCK — The Future of Block. Chain. Technology.™</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;700&family=Bungee+Shade&display=swap');
+
+  :root {
+    --neon-green: #00ff88;
+    --neon-purple: #a855f7;
+    --neon-blue: #3b82f6;
+    --neon-pink: #ff2d8a;
+    --dark-bg: #05050f;
+    --card-bg: rgba(15, 15, 35, 0.8);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark-bg);
+    color: #e0e0e0;
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* =======================================
+     LANDING PAGE (CRYPTO BRO MODE)
+     ======================================= */
+  #landing {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+  #landing.gone { display: none; }
+
+  /* Animated grid background */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridScroll 20s linear infinite;
+    z-index: 0;
+  }
+  @keyframes gridScroll {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(60px, 60px); }
+  }
+
+  /* Floating orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 { width: 400px; height: 400px; background: rgba(0,255,136,0.08); top: -10%; left: -5%; animation: orbFloat 15s ease-in-out infinite; }
+  .orb-2 { width: 500px; height: 500px; background: rgba(168,85,247,0.06); bottom: -15%; right: -10%; animation: orbFloat 20s ease-in-out infinite reverse; }
+  .orb-3 { width: 300px; height: 300px; background: rgba(59,130,246,0.05); top: 40%; left: 50%; animation: orbFloat 12s ease-in-out infinite 3s; }
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+  }
+
+  /* Nav */
+  .landing-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid rgba(0,255,136,0.1);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    background: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-logo .chain-icon { font-size: 18px; -webkit-text-fill-color: initial; }
+  .nav-links { display: flex; gap: 28px; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; }
+  .nav-links a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: pointer;
+  }
+  .nav-links a:hover { color: var(--neon-green); }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--neon-green), #00cc66);
+    color: #000;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,255,136,0.3); }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 100px 40px 60px;
+    position: relative;
+    z-index: 10;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 50px;
+    padding: 6px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--neon-green);
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+  .hero-badge .dot { display: inline-block; width: 6px; height: 6px; background: var(--neon-green); border-radius: 50%; margin-right: 8px; animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .hero h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(40px, 7vw, 88px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+  }
+  .hero h1 .gradient-text {
+    background: linear-gradient(135deg, var(--neon-green) 0%, var(--neon-blue) 50%, var(--neon-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero h1 .block-word { position: relative; }
+  .hero h1 .chain-word { font-style: italic; }
+
+  .hero-sub {
+    font-size: clamp(15px, 2vw, 20px);
+    color: rgba(255,255,255,0.5);
+    max-width: 600px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+  }
+  .hero-sub strong { color: var(--neon-green); }
+
+  .mint-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--neon-green), #00cc66);
+    color: #000;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 16px;
+    padding: 18px 48px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .mint-btn:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(0,255,136,0.4); }
+  .mint-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+    animation: sheen 3s ease-in-out infinite;
+  }
+  @keyframes sheen { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 60px;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--neon-green);
+  }
+  .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* Ticker */
+  .ticker-bar {
+    background: rgba(0,255,136,0.05);
+    border-top: 1px solid rgba(0,255,136,0.1);
+    border-bottom: 1px solid rgba(0,255,136,0.1);
+    padding: 10px 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+    margin-top: 60px;
+  }
+  .ticker-track {
+    display: flex;
+    gap: 40px;
+    animation: tickerScroll 30s linear infinite;
+    white-space: nowrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+  @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .ticker-item { display: flex; align-items: center; gap: 6px; }
+  .ticker-up { color: var(--neon-green); }
+  .ticker-down { color: #ff4444; }
+
+  /* Features */
+  .features {
+    padding: 80px 40px;
+    position: relative;
+    z-index: 10;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .features-title {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--neon-purple);
+    margin-bottom: 48px;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .feature-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 32px;
+    transition: all 0.3s;
+  }
+  .feature-card:hover { border-color: rgba(0,255,136,0.2); transform: translateY(-4px); }
+  .feature-icon { font-size: 36px; margin-bottom: 16px; }
+  .feature-card h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  .feature-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.7;
+  }
+
+  /* Roadmap */
+  .roadmap {
+    padding: 60px 40px 80px;
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .roadmap-title {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--neon-blue);
+    margin-bottom: 40px;
+  }
+  .roadmap-item {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+  }
+  .roadmap-q {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--neon-green);
+    background: rgba(0,255,136,0.08);
+    padding: 4px 12px;
+    border-radius: 4px;
+    min-width: 60px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .roadmap-text {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+  }
+  .roadmap-text strong { color: #fff; }
+
+  /* Whitepaper CTA */
+  .wp-section {
+    text-align: center;
+    padding: 40px;
+    position: relative;
+    z-index: 10;
+  }
+  .wp-btn {
+    background: transparent;
+    border: 1px solid rgba(168,85,247,0.4);
+    color: var(--neon-purple);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 12px 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+  }
+  .wp-btn:hover { background: rgba(168,85,247,0.1); }
+
+  /* Footer */
+  .landing-footer {
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    position: relative;
+    z-index: 10;
+  }
+
+  /* =======================================
+     WHITEPAPER MODAL
+     ======================================= */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #0d0d20;
+    border: 1px solid rgba(168,85,247,0.3);
+    border-radius: 12px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 40px;
+  }
+  .modal h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: var(--neon-purple);
+  }
+  .modal .wp-version {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 28px;
+  }
+  .modal h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    color: var(--neon-green);
+    margin: 24px 0 10px;
+    letter-spacing: 1px;
+  }
+  .modal p {
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 12px;
+  }
+  .modal .close-modal {
+    position: sticky;
+    top: 0;
+    float: right;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.3);
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 5;
+  }
+  .modal .equation {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(0,255,136,0.05);
+    border: 1px solid rgba(0,255,136,0.1);
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--neon-green);
+    margin: 12px 0;
+    text-align: center;
+  }
+
+  /* =======================================
+     GAME MODE
+     ======================================= */
+  #gameMode {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+  }
+  #gameMode.active { display: block; }
+
+  #gameCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  /* Game HUD */
+  .game-hud {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    z-index: 600;
+    background: linear-gradient(180deg, rgba(5,5,15,0.9) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .game-hud-left, .game-hud-right { pointer-events: auto; }
+  .hud-token {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    color: var(--neon-green);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hud-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .hud-chain-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+  .hud-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    margin-left: 8px;
+    transition: all 0.3s;
+  }
+  .hud-btn:hover { background: rgba(255,255,255,0.1); }
+  .hud-btn.danger { border-color: rgba(255,50,50,0.3); color: #ff4444; }
+  .hud-btn.danger:hover { background: rgba(255,50,50,0.1); }
+
+  /* Discord Notifications */
+  .discord-notif {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 700;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+  }
+  .notif {
+    background: #2f3136;
+    border-left: 3px solid #5865f2;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    max-width: 320px;
+    font-size: 12px;
+    color: #dcddde;
+    animation: notifSlide 0.3s ease-out, notifFade 0.5s ease-in 4.5s forwards;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  @keyframes notifSlide { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes notifFade { to { opacity: 0; transform: translateX(40px); } }
+  .notif-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .notif-server {
+    font-size: 10px;
+    color: #5865f2;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .notif-channel { font-size: 10px; color: #72767d; }
+  .notif-user { color: var(--neon-green); font-weight: 700; }
+  .notif-msg { line-height: 1.5; }
+
+  /* Game instructions overlay */
+  .game-instructions {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 650;
+    text-align: center;
+    pointer-events: none;
+    font-family: 'Orbitron', sans-serif;
+    animation: fadeInstructions 1s ease-in 4s forwards;
+    opacity: 1;
+  }
+  @keyframes fadeInstructions { to { opacity: 0; } }
+  .game-instructions h2 {
+    font-size: 24px;
+    color: var(--neon-green);
+    text-shadow: 0 0 30px rgba(0,255,136,0.5);
+    margin-bottom: 12px;
+  }
+  .game-instructions p {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.8;
+  }
+
+  /* Transition flash */
+  .flash-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--neon-green);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
+  }
+  .flash-overlay.flash {
+    opacity: 1;
+    transition: opacity 0.05s;
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- ====== FLASH ====== -->
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<!-- ====== LANDING PAGE ====== -->
+<div id="landing">
+  <nav class="landing-nav">
+    <div class="nav-logo">
+      <span class="chain-icon">⛓️</span> $BLOCK
+    </div>
+    <div class="nav-links">
+      <a onclick="document.querySelector('.features').scrollIntoView({behavior:'smooth'})">Features</a>
+      <a onclick="document.querySelector('.roadmap').scrollIntoView({behavior:'smooth'})">Roadmap</a>
+      <a id="wpNavLink">Whitepaper</a>
+      <a>Discord</a>
+    </div>
+    <button class="nav-cta" onclick="launchGame()">LAUNCH APP</button>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span>NOW LIVE ON MAINNET</div>
+    <h1>
+      THE FUTURE OF<br>
+      <span class="gradient-text"><span class="block-word">BLOCK.</span> <span class="chain-word">CHAIN.</span></span>
+    </h1>
+    <p class="hero-sub">
+      We're building the world's first <strong>truly decentralized block-and-chain protocol</strong>.
+      Real blocks. Real chains. No metaphors. This is what Satoshi would have wanted, probably.
+    </p>
+    <button class="mint-btn" onclick="launchGame()">⛏️ MINT YOUR FIRST BLOCK</button>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val" id="statBlocks">12,847</div>
+        <div class="stat-label">Blocks Minted</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="statChains">3,291</div>
+        <div class="stat-label">Chains Forged</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">$4.2B</div>
+        <div class="stat-label">Total Value Chained</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">∞</div>
+        <div class="stat-label">Vibes Created</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticker-bar">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <div class="features">
+    <div class="features-title">⬡ Why $BLOCK Is Different ⬡</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧱</div>
+        <h3>Real Blocks</h3>
+        <p>Unlike other blockchains that use abstract "blocks" of data, $BLOCK uses actual blocks. Wooden ones. We source them from a guy named Dave who has a lumber mill. The supply is finite (Dave only works Tuesdays).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⛓️</div>
+        <h3>Real Chains</h3>
+        <p>Our chains are forged from grade-304 stainless steel, sourced from the hardware store on 5th Avenue. Each link is hand-verified by our CTO (his name is also Dave, no relation). Proof of Chain™ ensures immutability.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⛏️</div>
+        <h3>Actual Mining</h3>
+        <p>Our mining consensus mechanism involves a real pickaxe. Miners physically extract blocks from the earth, then attach them to the chain. Energy-intensive? Yes. Carbon neutral? Absolutely not. But it's honest work.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏗️</div>
+        <h3>DeFi (Definitely Physical)</h3>
+        <p>Our DeFi ecosystem lets you stake blocks (literally stack them), provide chain liquidity (lubricate the chain links), and yield farm (grow blocks in a field). APY is measured in inches per year.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🖼️</div>
+        <h3>Block NFTs</h3>
+        <p>Each block is unique. Some have knots. Some are slightly damp. One has a face that looks like Dave. These imperfections are features, not bugs. Floor price: 2.4 ETH (Estimated Timber Hardness).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Web3 Ready</h3>
+        <p>Our blocks exist in three-dimensional space, which we believe qualifies as Web3. We've also put a block near a web once and nothing bad happened. This is the due diligence our investors require.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="roadmap">
+    <div class="roadmap-title">⬡ Roadmap ⬡</div>
+    <div class="roadmap-item">
+      <div class="roadmap-q">Q1</div>
+      <div class="roadmap-text"><strong>Genesis Block</strong> — Source the first block from Dave's lumber mill. Attach the first chain link. Deploy to physical mainnet (the garage).</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-q">Q2</div>
+      <div class="roadmap-text"><strong>Chain Scaling</strong> — Acquire longer chains. Stress-test by swinging chain around head. Establish the Block Improvement Proposal (BIP) process (basically yelling at Dave).</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-q">Q3</div>
+      <div class="roadmap-text"><strong>DeFi Launch</strong> — Open the block staking pool (it's a pile). Launch liquidity mining (WD-40 distribution event). First governance vote: "should we get more blocks?"</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-q">Q4</div>
+      <div class="roadmap-text"><strong>Metaverse Integration</strong> — Put a camera in front of the blocks so people can look at them online. This is the metaverse. We will charge admission.</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-q">Q5</div>
+      <div class="roadmap-text"><strong>World Domination</strong> — Buy more blocks. Get a bigger garage. Convince VC firms that blocks on chains is the future. It always has been.</div>
+    </div>
+  </div>
+
+  <div class="wp-section">
+    <button class="wp-btn" id="wpBtn">📄 READ THE WHITEPAPER</button>
+  </div>
+
+  <footer class="landing-footer">
+    © 2026 $BLOCK Protocol Foundation. All rights reserved. Not financial advice. Not any kind of advice. Dave is not liable.<br>
+    <span style="font-size:9px; opacity:0.3;">If you've read this far you legally owe us one (1) block.</span>
+  </footer>
+</div>
+
+<!-- ====== WHITEPAPER MODAL ====== -->
+<div class="modal-overlay" id="wpModal">
+  <div class="modal">
+    <button class="close-modal" onclick="document.getElementById('wpModal').classList.remove('active')">&times;</button>
+    <h2>$BLOCK WHITEPAPER</h2>
+    <div class="wp-version">v4.20 — FINAL DRAFT (Dave approved) — 69 pages (condensed)</div>
+
+    <h3>1. Abstract</h3>
+    <p>We present $BLOCK, a revolutionary peer-to-peer system for attaching blocks to chains. Previous attempts at block-chain technology have relied on software, cryptography, and mathematics. We believe this was a wrong turn. Our system uses wood and metal. We have solved the Byzantine Generals Problem by not inviting any generals.</p>
+
+    <h3>2. The Problem</h3>
+    <p>The world has many blocks. The world has many chains. But how many blocks are ON chains? Shockingly few. This represents a multi-trillion dollar Total Addressable Market of unchained blocks. Our mission is to chain every block, everywhere, all at once.</p>
+
+    <h3>3. Technical Architecture</h3>
+    <p>The $BLOCK protocol operates on a novel consensus mechanism we call Proof of Chain (PoC). Validators physically verify that each block is, in fact, attached to a chain. The mathematical proof is as follows:</p>
+    <div class="equation">
+      block + chain = blockchain<br>
+      ∴ blockchain = block + chain<br>
+      Q.E.D. ∎
+    </div>
+    <p>We believe this proof to be both rigorous and beautiful.</p>
+
+    <h3>4. Tokenomics</h3>
+    <p>Total supply: However many blocks Dave can make on Tuesday. Circulating supply: The ones we haven't lost. Burn mechanism: Literal fire (not recommended). The $BLOCK token is backed 1:1 by actual blocks, stored in a temperature-controlled facility (Dave's shed, he got a fan).</p>
+
+    <h3>5. Security Model</h3>
+    <p>A 51% attack on the $BLOCK network would require physically possessing 51% of all blocks. Given that Dave guards them with a medium-sized dog named Chainsaw, we consider this infeasible. The dog is part of the protocol. We call this Proof of Dog.</p>
+    <div class="equation">security = blocks × chains × dog</div>
+
+    <h3>6. Conclusion</h3>
+    <p>We are building the future. The future is blocks. The future is chains. The future is blocks on chains. If you're reading this and you're not already chaining blocks, we respectfully ask: what are you even doing?</p>
+    <p style="margin-top:20px; font-size:11px; color:rgba(255,255,255,0.2);">Peer reviewed by Dave. And also the other Dave.</p>
+  </div>
+</div>
+
+<!-- ====== GAME MODE ====== -->
+<div id="gameMode">
+  <canvas id="gameCanvas"></canvas>
+  <div class="game-hud">
+    <div class="game-hud-left">
+      <div class="hud-token">
+        ⛓️ $BLOCK
+        <span class="hud-price" id="gamePrice">$0.01</span>
+        <span class="hud-chain-count">CHAIN: <span id="chainLen">0</span> blocks</span>
+      </div>
+    </div>
+    <div class="game-hud-right">
+      <button class="hud-btn" id="mintBtn">⛏️ MINT BLOCK</button>
+      <button class="hud-btn" id="decentralizeBtn">💥 DECENTRALIZE</button>
+      <button class="hud-btn danger" id="rugBtn">🧶 RUG PULL</button>
+    </div>
+  </div>
+  <div class="game-instructions" id="gameInstructions">
+    <h2>WELCOME TO THE BLOCKCHAIN</h2>
+    <p>Click MINT to drop blocks. Click blocks to chain them together.<br>
+    Build the longest chain. Increase the $BLOCK price.<br>
+    Whatever you do, don't hit RUG PULL.</p>
+  </div>
+  <div class="discord-notif" id="discordNotifs"></div>
+</div>
+
+<script>
+(function(){
+  // ===========================
+  // TICKER
+  // ===========================
+  const tickerItems = [
+    ['$BLOCK', '+420.69%', true], ['$CHAIN', '+69.42%', true], ['$DAVE', '-99.9%', false],
+    ['$LUMBER', '+12.3%', true], ['$WD40', '+5.8%', true], ['$GARAGE', '-2.1%', false],
+    ['$KNOT', '+88.8%', true], ['$DAMP', '-14.2%', false], ['$PICKAXE', '+33.3%', true],
+    ['$SHED', '+7.7%', true], ['$CHAINSAW', '+100.0%', true], ['$TUESDAY', '+∞%', true],
+  ];
+  const tickerTrack = document.getElementById('tickerTrack');
+  let tickerHTML = '';
+  for (let r = 0; r < 4; r++) {
+    tickerItems.forEach(([name, change, up]) => {
+      tickerHTML += `<div class="ticker-item">${name} <span class="${up ? 'ticker-up' : 'ticker-down'}">${change}</span></div>`;
+    });
+  }
+  tickerTrack.innerHTML = tickerHTML;
+
+  // Animate stats
+  function animateStats() {
+    const el1 = document.getElementById('statBlocks');
+    const el2 = document.getElementById('statChains');
+    setInterval(() => {
+      const v1 = parseInt(el1.textContent.replace(/,/g, ''));
+      el1.textContent = (v1 + Math.floor(Math.random() * 5)).toLocaleString();
+      if (Math.random() > 0.5) {
+        const v2 = parseInt(el2.textContent.replace(/,/g, ''));
+        el2.textContent = (v2 + Math.floor(Math.random() * 3)).toLocaleString();
+      }
+    }, 2000);
+  }
+  animateStats();
+
+  // Whitepaper modal
+  document.getElementById('wpBtn').addEventListener('click', () => document.getElementById('wpModal').classList.add('active'));
+  document.getElementById('wpNavLink').addEventListener('click', () => document.getElementById('wpModal').classList.add('active'));
+  document.getElementById('wpModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('active'); });
+
+  // ===========================
+  // GAME
+  // ===========================
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const flash = document.getElementById('flashOverlay');
+  let gameActive = false;
+  let blocks = [];
+  let chains = []; // pairs of block indices
+  let chainLength = 0;
+  let blockPrice = 0.01;
+  let selectedBlock = null;
+  let dragging = false;
+  let dragOffX = 0, dragOffY = 0;
+  let mouseX = 0, mouseY = 0;
+  let blockIdCounter = 0;
+  let rugPulled = false;
+  let groundY = 0;
+
+  // Discord messages
+  const discordMsgs = [
+    { user: 'CryptoChad42', msg: 'just aped in 500 blocks LFG 🚀🚀🚀' },
+    { user: 'DaveLumber', msg: 'guys i can only make so many blocks please stop calling me' },
+    { user: 'BlockMaxi', msg: 'BLOCKS ON CHAINS IS THE FUTURE. i will not elaborate' },
+    { user: 'WenLambo', msg: 'if $BLOCK hits $1 im getting a block tattooed on my face' },
+    { user: 'ChainGang_88', msg: 'just chained my 47th block. my wife left me. still bullish' },
+    { user: 'DeFi_Derek', msg: 'the fundamentals are solid (literally, they\'re wooden blocks)' },
+    { user: 'Dave2_CTO', msg: 'i tested the chain. it held. bullish. also im not a CTO im a plumber' },
+    { user: '0xWoodBlock', msg: 'GUYS THE WHITEPAPER MATH CHECKS OUT. block + chain = blockchain' },
+    { user: 'SatoshisDave', msg: 'selling everything for $BLOCK. my financial advisor said "what" and then "no"' },
+    { user: 'ChainLinkCarl', msg: 'im literally just a hardware store employee why am i in this discord' },
+    { user: 'NGMISteve', msg: 'paper hands selling at $0.03 smh they dont understand the technology (wood)' },
+    { user: 'BlockWhale', msg: 'just bought 10,000 blocks. my garage is full. my car is on the lawn. worth it' },
+    { user: 'DaveLumber', msg: 'UPDATE: it is not tuesday. no blocks today. the market will have to wait' },
+    { user: 'VCBro_Capital', msg: 'we just led a $50M Series A in $BLOCK. due diligence: we touched a block. felt good' },
+    { user: 'MetaChainer', msg: 'once we put a camera on the blocks this thing is going parabolic' },
+    { user: 'ChainsawTheDog', msg: 'woof' },
+    { user: 'RugDetector9000', msg: '⚠️ whatever you do DO NOT press the rug pull button' },
+    { user: 'BlockMaxi', msg: 'imagine NOT chaining blocks in 2026. couldn\'t be me. literally is not me' },
+    { user: 'GarageValidator', msg: 'just validated 12 blocks. method: looked at them. they\'re blocks. confirmed' },
+    { user: 'DaveLumber', msg: 'the dog bit another validator. we\'re calling this a "security feature"' },
+  ];
+  let discordIdx = 0;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    groundY = canvas.height - 60;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  window.launchGame = function() {
+    document.getElementById('wpModal').classList.remove('active');
+    flash.classList.add('flash');
+    setTimeout(() => {
+      document.getElementById('landing').classList.add('gone');
+      document.getElementById('gameMode').classList.add('active');
+      flash.classList.remove('flash');
+      gameActive = true;
+      // Drop a few starter blocks
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => spawnBlock(), i * 400);
+      }
+      startDiscordLoop();
+      requestAnimationFrame(gameLoop);
+    }, 150);
+  };
+
+  function spawnBlock() {
+    const size = 40 + Math.random() * 25;
+    const block = {
+      id: blockIdCounter++,
+      x: 100 + Math.random() * (canvas.width - 200),
+      y: -size - Math.random() * 100,
+      w: size,
+      h: size * (0.7 + Math.random() * 0.3),
+      vx: (Math.random() - 0.5) * 2,
+      vy: 0,
+      rotation: (Math.random() - 0.5) * 0.3,
+      vr: (Math.random() - 0.5) * 0.02,
+      grounded: false,
+      chained: false,
+      woodGrain: Math.floor(Math.random() * 4),
+      knots: Math.random() > 0.6 ? Math.floor(Math.random() * 3) + 1 : 0,
+      damp: Math.random() > 0.85,
+      hasFace: Math.random() > 0.92,
+      color: ['#c4903d', '#b8860b', '#d2a45e', '#a0722a', '#deb887'][Math.floor(Math.random() * 5)],
+    };
+    blocks.push(block);
+    updatePrice();
+    playBlockSound();
+  }
+
+  function updatePrice() {
+    // Count longest chain
+    chainLength = computeLongestChain();
+    blockPrice = 0.01 * Math.pow(1.5, chainLength) + blocks.length * 0.001;
+    document.getElementById('gamePrice').textContent = '$' + blockPrice.toFixed(2);
+    document.getElementById('chainLen').textContent = chainLength;
+    document.getElementById('gamePrice').style.color = chainLength > 5 ? '#ff2d8a' : chainLength > 2 ? '#a855f7' : '#00ff88';
+  }
+
+  function computeLongestChain() {
+    if (chains.length === 0) return 0;
+    // Build adjacency
+    const adj = {};
+    blocks.forEach(b => adj[b.id] = []);
+    chains.forEach(([a, b]) => {
+      adj[a] = adj[a] || [];
+      adj[b] = adj[b] || [];
+      adj[a].push(b);
+      adj[b].push(a);
+    });
+    // BFS from each node
+    let maxLen = 0;
+    Object.keys(adj).forEach(startId => {
+      const visited = new Set();
+      const queue = [[parseInt(startId), 1]];
+      visited.add(parseInt(startId));
+      while (queue.length) {
+        const [node, depth] = queue.shift();
+        maxLen = Math.max(maxLen, depth);
+        (adj[node] || []).forEach(neighbor => {
+          if (!visited.has(neighbor)) {
+            visited.add(neighbor);
+            queue.push([neighbor, depth + 1]);
+          }
+        });
+      }
+    });
+    return maxLen;
+  }
+
+  // Audio
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  function playBlockSound() {
+    ensureAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = 80 + Math.random() * 60;
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.15);
+  }
+  function playChainSound() {
+    ensureAudio();
+    for (let i = 0; i < 3; i++) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = 400 + i * 200 + Math.random() * 100;
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime + i * 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.05 + 0.2);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + i * 0.05);
+      osc.stop(audioCtx.currentTime + i * 0.05 + 0.2);
+    }
+  }
+  function playRugSound() {
+    ensureAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 1);
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 1);
+  }
+
+  // Discord loop
+  function startDiscordLoop() {
+    function postDiscord() {
+      if (!gameActive) return;
+      const msg = discordMsgs[discordIdx % discordMsgs.length];
+      discordIdx++;
+      const container = document.getElementById('discordNotifs');
+      const el = document.createElement('div');
+      el.className = 'notif';
+      el.innerHTML = `
+        <div class="notif-header">
+          <span class="notif-server">$BLOCK Official</span>
+          <span class="notif-channel">#general</span>
+        </div>
+        <div class="notif-msg"><span class="notif-user">${msg.user}:</span> ${msg.msg}</div>
+      `;
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 5500);
+      const next = 3000 + Math.random() * 5000;
+      setTimeout(postDiscord, next);
+    }
+    setTimeout(postDiscord, 2000);
+  }
+
+  // Buttons
+  document.getElementById('mintBtn').addEventListener('click', () => {
+    for (let i = 0; i < (rugPulled ? 5 : 1); i++) {
+      setTimeout(() => spawnBlock(), i * 100);
+    }
+  });
+
+  document.getElementById('decentralizeBtn').addEventListener('click', () => {
+    blocks.forEach(b => {
+      b.vx = (Math.random() - 0.5) * 20;
+      b.vy = -(5 + Math.random() * 15);
+      b.vr = (Math.random() - 0.5) * 0.3;
+      b.grounded = false;
+    });
+    chains = [];
+    updatePrice();
+    ensureAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.value = 200;
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+  });
+
+  document.getElementById('rugBtn').addEventListener('click', () => {
+    rugPulled = true;
+    playRugSound();
+    // Everything falls through the floor
+    groundY = canvas.height + 500;
+    blocks.forEach(b => {
+      b.grounded = false;
+      b.vy = Math.random() * 5;
+    });
+    // Price crash animation
+    let crashInterval = setInterval(() => {
+      blockPrice *= 0.85;
+      if (blockPrice < 0.0001) {
+        blockPrice = 0;
+        clearInterval(crashInterval);
+        document.getElementById('gamePrice').textContent = '$0.00';
+        document.getElementById('gamePrice').style.color = '#ff4444';
+      } else {
+        document.getElementById('gamePrice').textContent = '$' + blockPrice.toFixed(4);
+        document.getElementById('gamePrice').style.color = '#ff4444';
+      }
+    }, 100);
+    // Reset after dramatic pause
+    setTimeout(() => {
+      rugPulled = false;
+      groundY = canvas.height - 60;
+      blocks = [];
+      chains = [];
+      blockPrice = 0.01;
+      updatePrice();
+      document.getElementById('gamePrice').style.color = '#00ff88';
+      // Spawn fresh
+      for (let i = 0; i < 3; i++) setTimeout(() => spawnBlock(), i * 300);
+    }, 4000);
+  });
+
+  // Mouse/touch interaction
+  canvas.addEventListener('mousedown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    // Find clicked block (reverse order = top first)
+    for (let i = blocks.length - 1; i >= 0; i--) {
+      const b = blocks[i];
+      if (mx > b.x - b.w/2 && mx < b.x + b.w/2 && my > b.y - b.h/2 && my < b.y + b.h/2) {
+        if (selectedBlock !== null && selectedBlock !== b.id) {
+          // Chain them!
+          const alreadyChained = chains.some(([a, c]) => (a === selectedBlock && c === b.id) || (a === b.id && c === selectedBlock));
+          if (!alreadyChained) {
+            chains.push([selectedBlock, b.id]);
+            const sb = blocks.find(bl => bl.id === selectedBlock);
+            if (sb) sb.chained = true;
+            b.chained = true;
+            playChainSound();
+            updatePrice();
+          }
+          selectedBlock = null;
+        } else {
+          selectedBlock = b.id;
+          dragging = true;
+          dragOffX = mx - b.x;
+          dragOffY = my - b.y;
+          b.grounded = false;
+        }
+        return;
+      }
+    }
+    selectedBlock = null;
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+    if (dragging && selectedBlock !== null) {
+      const b = blocks.find(bl => bl.id === selectedBlock);
+      if (b) {
+        b.x = mouseX - dragOffX;
+        b.y = mouseY - dragOffY;
+        b.vx = 0;
+        b.vy = 0;
+      }
+    }
+  });
+
+  canvas.addEventListener('mouseup', () => { dragging = false; });
+
+  // Touch support
+  canvas.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    canvas.dispatchEvent(new MouseEvent('mousedown', { clientX: t.clientX, clientY: t.clientY }));
+  }, { passive: false });
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const t = e.touches[0];
+    canvas.dispatchEvent(new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY }));
+  }, { passive: false });
+  canvas.addEventListener('touchend', () => {
+    canvas.dispatchEvent(new MouseEvent('mouseup'));
+  });
+
+  // ===========================
+  // GAME LOOP
+  // ===========================
+  function gameLoop() {
+    if (!gameActive) return;
+    const W = canvas.width, H = canvas.height;
+
+    // Physics
+    blocks.forEach(b => {
+      if (dragging && b.id === selectedBlock) return;
+      if (!b.grounded) {
+        b.vy += 0.4; // gravity
+        b.x += b.vx;
+        b.y += b.vy;
+        b.rotation += b.vr;
+
+        // Ground collision
+        if (b.y + b.h / 2 > groundY) {
+          b.y = groundY - b.h / 2;
+          b.vy *= -0.3;
+          b.vx *= 0.8;
+          b.vr *= 0.7;
+          if (Math.abs(b.vy) < 1) {
+            b.grounded = true;
+            b.vy = 0;
+            b.vr = 0;
+          }
+        }
+
+        // Walls
+        if (b.x - b.w/2 < 0) { b.x = b.w/2; b.vx *= -0.5; }
+        if (b.x + b.w/2 > W) { b.x = W - b.w/2; b.vx *= -0.5; }
+      }
+    });
+
+    // Chain physics (spring constraint)
+    chains.forEach(([idA, idB]) => {
+      const a = blocks.find(bl => bl.id === idA);
+      const b = blocks.find(bl => bl.id === idB);
+      if (!a || !b) return;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const restLen = (a.w + b.w) * 0.8;
+      if (dist > restLen && dist > 0) {
+        const force = (dist - restLen) * 0.02;
+        const fx = (dx / dist) * force;
+        const fy = (dy / dist) * force;
+        if (!dragging || a.id !== selectedBlock) { a.vx += fx; a.vy += fy; a.grounded = false; }
+        if (!dragging || b.id !== selectedBlock) { b.vx -= fx; b.vy -= fy; b.grounded = false; }
+      }
+    });
+
+    // ---- RENDER ----
+    ctx.clearRect(0, 0, W, H);
+
+    // Background - garage wall
+    const wallGrad = ctx.createLinearGradient(0, 0, 0, H);
+    wallGrad.addColorStop(0, '#1a1520');
+    wallGrad.addColorStop(0.6, '#12100d');
+    wallGrad.addColorStop(1, '#0a0806');
+    ctx.fillStyle = wallGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Concrete floor
+    if (groundY < H + 100) {
+      ctx.fillStyle = '#2a2824';
+      ctx.fillRect(0, groundY, W, H - groundY + 100);
+      ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+      ctx.lineWidth = 1;
+      for (let gx = 0; gx < W; gx += 80) {
+        ctx.beginPath();
+        ctx.moveTo(gx, groundY);
+        ctx.lineTo(gx, H);
+        ctx.stroke();
+      }
+
+      // Rug
+      if (!rugPulled) {
+        const rugGrad = ctx.createLinearGradient(W * 0.2, 0, W * 0.8, 0);
+        rugGrad.addColorStop(0, '#6b2fa0');
+        rugGrad.addColorStop(0.5, '#8b3fc0');
+        rugGrad.addColorStop(1, '#6b2fa0');
+        ctx.fillStyle = rugGrad;
+        ctx.fillRect(W * 0.15, groundY, W * 0.7, 15);
+        // Rug pattern
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        for (let rx = W * 0.15; rx < W * 0.85; rx += 20) {
+          ctx.beginPath();
+          ctx.moveTo(rx, groundY);
+          ctx.lineTo(rx, groundY + 15);
+          ctx.stroke();
+        }
+        // Fringes
+        ctx.strokeStyle = '#5a2090';
+        for (let fx = W * 0.15; fx < W * 0.85; fx += 6) {
+          ctx.beginPath();
+          ctx.moveTo(fx, groundY + 15);
+          ctx.lineTo(fx + (Math.random()-0.5)*3, groundY + 22);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw chains (links)
+    chains.forEach(([idA, idB]) => {
+      const a = blocks.find(bl => bl.id === idA);
+      const b = blocks.find(bl => bl.id === idB);
+      if (!a || !b) return;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const links = Math.max(3, Math.floor(dist / 12));
+
+      for (let i = 0; i <= links; i++) {
+        const t = i / links;
+        const cx = a.x + dx * t;
+        const cy = a.y + dy * t + Math.sin(t * Math.PI) * 8; // sag
+        const linkW = 6;
+        const linkH = 4;
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(Math.atan2(dy, dx) + (i % 2 ? Math.PI / 2 : 0));
+
+        // Chain link
+        ctx.strokeStyle = '#888';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, linkW, linkH, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        // Shine
+        ctx.strokeStyle = 'rgba(200,200,200,0.3)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(0, -1, linkW - 1, -Math.PI * 0.8, -Math.PI * 0.3);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+    });
+
+    // Draw blocks
+    blocks.forEach(b => {
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rotation);
+
+      // Shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.fillRect(-b.w/2 + 4, -b.h/2 + 4, b.w, b.h);
+
+      // Block body
+      ctx.fillStyle = b.color;
+      ctx.fillRect(-b.w/2, -b.h/2, b.w, b.h);
+
+      // Wood grain
+      ctx.strokeStyle = `rgba(0,0,0,0.15)`;
+      ctx.lineWidth = 0.5;
+      for (let g = 0; g < 5; g++) {
+        const gy = -b.h/2 + (b.h / 5) * g + b.woodGrain * 3;
+        ctx.beginPath();
+        ctx.moveTo(-b.w/2, gy);
+        ctx.quadraticCurveTo(0, gy + (Math.sin(g) * 3), b.w/2, gy + 1);
+        ctx.stroke();
+      }
+
+      // Knots
+      for (let k = 0; k < b.knots; k++) {
+        const kx = (k - b.knots/2) * 12;
+        const ky = (k % 2 - 0.5) * b.h * 0.3;
+        ctx.fillStyle = 'rgba(80,50,20,0.5)';
+        ctx.beginPath();
+        ctx.ellipse(kx, ky, 4, 3, k * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Damp spot
+      if (b.damp) {
+        ctx.fillStyle = 'rgba(40,60,80,0.2)';
+        ctx.beginPath();
+        ctx.ellipse(5, 3, b.w * 0.25, b.h * 0.2, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Dave face
+      if (b.hasFace) {
+        ctx.fillStyle = 'rgba(60,30,10,0.4)';
+        // Eyes
+        ctx.beginPath(); ctx.arc(-6, -4, 2, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(6, -4, 2, 0, Math.PI*2); ctx.fill();
+        // Smile
+        ctx.beginPath(); ctx.arc(0, 2, 6, 0.1, Math.PI - 0.1); ctx.stroke();
+      }
+
+      // Border
+      ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(-b.w/2, -b.h/2, b.w, b.h);
+
+      // Selection highlight
+      if (b.id === selectedBlock) {
+        ctx.strokeStyle = '#00ff88';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(-b.w/2 - 4, -b.h/2 - 4, b.w + 8, b.h + 8);
+        ctx.setLineDash([]);
+      }
+
+      ctx.restore();
+    });
+
+    // Block count label
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.font = '120px "Orbitron", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(blocks.length, W/2, H * 0.45);
+    ctx.font = '14px "JetBrains Mono", monospace';
+    ctx.fillText('BLOCKS ON THE BLOCKCHAIN', W/2, H * 0.45 + 30);
+
+    requestAnimationFrame(gameLoop);
+  }
+
+})();
+</script>
+</body>
+</html>

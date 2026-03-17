@@ -11,12 +11,14 @@ flowchart LR
         bm[birdmailer.html]
         bp[boatpedia.html]
         env[envisioning.html]
+        bc[blockchain.html]
     end    
 
 
     index -- contact us --> bm
     index -- Begin Your Voyage --> bp
     index -- Learn What We Do --> env
+    index -- a --> bc
 
 
 ```
