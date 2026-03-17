@@ -18,7 +18,7 @@ flowchart LR
     index -- contact us --> bm
     index -- Begin Your Voyage --> bp
     index -- Learn What We Do --> env
-    index -- a --> bc
+    index -- blockchain adjacent card --> bc
 
 
 ```
