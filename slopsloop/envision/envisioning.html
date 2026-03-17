@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Envisioning Innovation — MindMaze: Corporate Seas™</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English+SC&family=Courier+Prime:wght@400;700&family=MedievalSharp&family=Pirata+One&display=swap');
+
+  :root {
+    --encarta-purple: #2a1045;
+    --encarta-blue: #1a2a5e;
+    --encarta-gold: #c9a84c;
+    --encarta-highlight: #e8c94a;
+    --panel-bg: #1c0e30;
+    --sea-dark: #0a1628;
+    --sea-mid: #0f2847;
+    --sea-light: #1a4a6e;
+    --parchment: #f0e6c8;
+    --wood-dark: #3a2210;
+    --wood-mid: #5c3a1e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0612;
+    color: var(--parchment);
+    font-family: 'IM Fell English SC', serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ====== TITLE SCREEN ====== */
+  #titleScreen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #0a0420 0%, var(--encarta-purple) 50%, #0a0420 100%);
+    z-index: 100;
+    cursor: pointer;
+  }
+  #titleScreen.gone { display: none; }
+
+  .title-border {
+    border: 3px solid var(--encarta-gold);
+    border-radius: 4px;
+    padding: 40px 60px;
+    background: linear-gradient(180deg, rgba(42,16,69,0.9), rgba(26,42,94,0.9));
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 40px rgba(201,168,76,0.15), inset 0 0 30px rgba(0,0,0,0.5);
+    max-width: 90vw;
+  }
+  .title-border::before, .title-border::after {
+    content: '⚓';
+    position: absolute;
+    font-size: 24px;
+    color: var(--encarta-gold);
+    opacity: 0.6;
+  }
+  .title-border::before { top: 8px; left: 12px; }
+  .title-border::after { bottom: 8px; right: 12px; }
+
+  .encarta-badge {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: rgba(201,168,76,0.5);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .title-main {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(24px, 5vw, 48px);
+    font-weight: 900;
+    color: var(--encarta-gold);
+    text-shadow: 0 2px 8px rgba(201,168,76,0.3);
+    line-height: 1.2;
+  }
+  .title-sub {
+    font-family: 'Pirata One', cursive;
+    font-size: clamp(20px, 4vw, 36px);
+    color: var(--encarta-highlight);
+    margin: 4px 0 16px;
+    text-shadow: 0 2px 10px rgba(232,201,74,0.2);
+  }
+  .title-tagline {
+    font-size: 13px;
+    color: rgba(240,230,200,0.4);
+    font-style: italic;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .title-start {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    color: var(--encarta-gold);
+    letter-spacing: 3px;
+    animation: blink 1.5s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .title-copy {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    color: rgba(201,168,76,0.25);
+    margin-top: 16px;
+    letter-spacing: 1px;
+  }
+
+  /* ====== MAIN GAME LAYOUT ====== */
+  #gameScreen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+  }
+  #gameScreen.active { display: flex; }
+
+  /* Top bar */
+  .top-bar {
+    background: linear-gradient(90deg, var(--wood-dark), var(--wood-mid), var(--wood-dark));
+    border-bottom: 3px solid var(--encarta-gold);
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+    flex-shrink: 0;
+  }
+  .top-title {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: var(--encarta-gold);
+    letter-spacing: 2px;
+  }
+  .top-stats {
+    display: flex; gap: 20px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--parchment);
+  }
+  .stat-item span { color: var(--encarta-gold); font-weight: 700; }
+
+  /* Main area: scene + sidebar */
+  .main-area {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* Scene panel */
+  .scene-panel {
+    flex: 1;
+    position: relative;
+    border-right: 3px solid var(--encarta-gold);
+    overflow: hidden;
+  }
+  #sceneCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Room label */
+  .room-label {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Pirata One', cursive;
+    font-size: 18px;
+    color: var(--encarta-gold);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(201,168,76,0.2);
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 5;
+  }
+
+  /* Navigation doors overlay */
+  .nav-doors {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+  .door-btn {
+    background: linear-gradient(180deg, var(--wood-mid), var(--wood-dark));
+    border: 2px solid var(--encarta-gold);
+    border-radius: 4px 4px 0 0;
+    color: var(--parchment);
+    font-family: 'IM Fell English SC', serif;
+    font-size: 11px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 80px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    position: relative;
+  }
+  .door-btn::before {
+    content: '🚪';
+    display: block;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+  .door-btn:hover { background: linear-gradient(180deg, #7a5a2e, var(--wood-mid)); border-color: var(--encarta-highlight); }
+  .door-btn.locked { opacity: 0.4; cursor: not-allowed; }
+  .door-btn.locked::before { content: '🔒'; }
+  .door-btn.locked:hover { background: linear-gradient(180deg, var(--wood-mid), var(--wood-dark)); border-color: var(--encarta-gold); }
+
+  /* Right sidebar: question panel */
+  .question-panel {
+    width: clamp(300px, 35vw, 440px);
+    background: linear-gradient(180deg, var(--panel-bg), #0f0820);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .q-header {
+    background: linear-gradient(90deg, var(--encarta-purple), var(--encarta-blue));
+    border-bottom: 2px solid var(--encarta-gold);
+    padding: 10px 16px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: var(--encarta-gold);
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  .q-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--encarta-gold) var(--panel-bg);
+  }
+  .q-scroll::-webkit-scrollbar { width: 6px; }
+  .q-scroll::-webkit-scrollbar-track { background: var(--panel-bg); }
+  .q-scroll::-webkit-scrollbar-thumb { background: var(--encarta-gold); border-radius: 3px; }
+
+  .q-text {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    color: var(--parchment);
+  }
+  .q-text .emoji { font-size: 20px; display: block; text-align: center; margin-bottom: 8px; }
+
+  .q-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .q-choice {
+    background: rgba(201,168,76,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 13px;
+    color: var(--parchment);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    line-height: 1.5;
+  }
+  .q-choice:hover { background: rgba(201,168,76,0.12); border-color: var(--encarta-gold); }
+  .q-choice.correct {
+    background: rgba(40,180,80,0.15);
+    border-color: #28b450;
+    color: #6aff8a;
+  }
+  .q-choice.wrong {
+    background: rgba(220,40,40,0.15);
+    border-color: #dc2828;
+    color: #ff6a6a;
+  }
+  .q-choice.disabled { pointer-events: none; opacity: 0.6; }
+
+  .q-feedback {
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    display: none;
+  }
+  .q-feedback.show { display: block; }
+  .q-feedback.success {
+    background: rgba(40,180,80,0.1);
+    border: 1px solid rgba(40,180,80,0.3);
+    color: #6aff8a;
+  }
+  .q-feedback.fail {
+    background: rgba(220,40,40,0.1);
+    border: 1px solid rgba(220,40,40,0.3);
+    color: #ff8a8a;
+  }
+
+  .proceed-btn {
+    display: none;
+    background: linear-gradient(135deg, var(--encarta-gold), #a88a2e);
+    color: #1a0a2e;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    width: 100%;
+    transition: all 0.3s;
+    margin-top: 8px;
+  }
+  .proceed-btn.show { display: block; }
+  .proceed-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(201,168,76,0.3); }
+
+  /* Footer */
+  .bottom-bar {
+    background: linear-gradient(90deg, var(--wood-dark), var(--wood-mid), var(--wood-dark));
+    border-top: 3px solid var(--encarta-gold);
+    padding: 4px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 28px;
+    flex-shrink: 0;
+  }
+  .bottom-hint {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: rgba(240,230,200,0.3);
+    font-style: italic;
+  }
+  .bottom-copy {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    color: rgba(201,168,76,0.2);
+  }
+
+  /* Victory overlay */
+  .victory-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,3,10,0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    flex-direction: column;
+    text-align: center;
+    padding: 40px;
+  }
+  .victory-overlay.active { display: flex; }
+  .victory-title {
+    font-family: 'Pirata One', cursive;
+    font-size: clamp(28px, 5vw, 52px);
+    color: var(--encarta-gold);
+    text-shadow: 0 0 30px rgba(201,168,76,0.4);
+    margin-bottom: 16px;
+  }
+  .victory-text {
+    font-size: 16px;
+    color: var(--parchment);
+    max-width: 500px;
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .victory-text em { color: var(--encarta-gold); font-style: normal; }
+  .victory-btn {
+    background: linear-gradient(135deg, var(--encarta-gold), #a88a2e);
+    color: #1a0a2e;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 2px;
+  }
+  .victory-btn:hover { box-shadow: 0 0 20px rgba(201,168,76,0.4); }
+
+  @media (max-width: 700px) {
+    .main-area { flex-direction: column; }
+    .scene-panel { border-right: none; border-bottom: 3px solid var(--encarta-gold); min-height: 40vh; }
+    .question-panel { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== TITLE ====== -->
+<div id="titleScreen">
+  <div class="title-border">
+    <div class="encarta-badge">Microsoft ® Encarta ® Presents</div>
+    <div class="title-main">ENVISIONING<br>INNOVATION</div>
+    <div class="title-sub">⚓ MindMaze: Corporate Seas ⚓</div>
+    <div class="title-tagline">
+      Navigate the treacherous waters of synergy.<br>
+      Unlock the paradigm. Shift the framework.<br>
+      <i>Can you leverage your core competencies to reach the C-Suite?</i>
+    </div>
+    <div class="title-start">— CLICK TO EMBARK —</div>
+    <div class="title-copy">© 1993-2026 Encarta MindMaze™ · Not affiliated with Microsoft · Dave approved</div>
+  </div>
+</div>
+
+<!-- ====== GAME ====== -->
+<div id="gameScreen">
+  <div class="top-bar">
+    <div class="top-title">⚓ ENVISIONING INNOVATION ⚓</div>
+    <div class="top-stats">
+      <div class="stat-item">Room: <span id="roomNum">1</span>/10</div>
+      <div class="stat-item">Synergies: <span id="scoreNum">0</span></div>
+      <div class="stat-item">Paradigms Shifted: <span id="shiftNum">0</span></div>
+    </div>
+  </div>
+
+  <div class="main-area">
+    <div class="scene-panel">
+      <canvas id="sceneCanvas"></canvas>
+      <div class="room-label" id="roomLabel">The Bay of Onboarding</div>
+      <div class="nav-doors" id="navDoors"></div>
+    </div>
+
+    <div class="question-panel">
+      <div class="q-header" id="qHeader">⬡ CHALLENGE THE PARADIGM ⬡</div>
+      <div class="q-scroll">
+        <div class="q-text" id="qText"></div>
+        <div class="q-choices" id="qChoices"></div>
+        <div class="q-feedback" id="qFeedback"></div>
+        <button class="proceed-btn" id="proceedBtn">⛵ SAIL FORWARD ⛵</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="bottom-hint" id="bottomHint">Tip: Think outside the box. Then put the box on a boat.</div>
+    <div class="bottom-copy">MindMaze: Corporate Seas™ · Encarta Edition · v4.20</div>
+  </div>
+</div>
+
+<!-- ====== VICTORY ====== -->
+<div class="victory-overlay" id="victoryOverlay">
+  <div class="victory-title">⚓ You Have Reached The C-Suite! ⚓</div>
+  <div class="victory-text" id="victoryText"></div>
+  <button class="victory-btn" onclick="location.reload()">🔄 RE-LEVERAGE THE JOURNEY</button>
+</div>
+
+<script>
+(function(){
+  // ===========================
+  // DATA
+  // ===========================
+  const rooms = [
+    {
+      name: "The Bay of Onboarding",
+      scene: "harbor",
+      hint: "Every journey begins with mandatory orientation.",
+    },
+    {
+      name: "The Straits of Synergy",
+      scene: "twoships",
+      hint: "Two vessels are stronger than one (citation needed).",
+    },
+    {
+      name: "Isle of Ideation",
+      scene: "island",
+      hint: "Where ideas go to be workshopped into oblivion.",
+    },
+    {
+      name: "The Mermaid's Standup",
+      scene: "mermaids",
+      hint: "Any blockers? The mermaids have blockers.",
+    },
+    {
+      name: "Serpent of Scope Creep",
+      scene: "serpent",
+      hint: "It just keeps getting longer. Like this project.",
+    },
+    {
+      name: "The Kraken of KPIs",
+      scene: "kraken",
+      hint: "Eight arms. Eight quarterly metrics. Coincidence?",
+    },
+    {
+      name: "Pirate Bay of Disruption",
+      scene: "pirates",
+      hint: "They didn't get permission. They got market share.",
+    },
+    {
+      name: "Neptune's Boardroom",
+      scene: "neptune",
+      hint: "The ultimate stakeholder. Literally holds a stake.",
+    },
+    {
+      name: "The Whirlpool of Pivot",
+      scene: "whirlpool",
+      hint: "Going in circles is innovation if you rebrand it.",
+    },
+    {
+      name: "The C-Suite Shores",
+      scene: "csuite",
+      hint: "You made it. The corner office has an ocean view.",
+    },
+  ];
+
+  const questions = [
+    // Room 0: Bay of Onboarding
+    {
+      emoji: "🚢",
+      text: "Your new employee orientation packet describes the company culture as 'a dynamic ecosystem of cross-pollinating thought leaders.' What does this actually mean?",
+      choices: [
+        "People talk in meetings",
+        "The CEO read a book once",
+        "Nobody knows but it tested well in focus groups",
+        "The office has plants"
+      ],
+      correct: 2,
+      successMsg: "🎯 Way to pivot! You've successfully hydrated that paradigm. Your onboarding synergies are off the charts!",
+      failMsg: "Hmm, that's not quite aligned with our core deliverables. Let's circle back on this after the standup."
+    },
+    // Room 1: Straits of Synergy
+    {
+      emoji: "⛵",
+      text: "Two departments have been asked to 'leverage synergistic alignment' on a deliverable. The deadline was last week. What is the optimal bandwidth-maximizing strategy?",
+      choices: [
+        "Schedule a meeting to plan a meeting about the meeting",
+        "Send a Slack message that says 'thoughts?'",
+        "Create a cross-functional task force with a Gantt chart",
+        "All of the above, simultaneously, while on PTO"
+      ],
+      correct: 3,
+      successMsg: "⚡ PARADIGM SHIFTED! You've demonstrated elite-tier stakeholder engagement. Your synergy levels are unprecedented!",
+      failMsg: "That's a bit siloed. We need more holistic throughput on this one. Let's take this offline."
+    },
+    // Room 2: Isle of Ideation
+    {
+      emoji: "🏝️",
+      text: "During a brainstorming session, someone suggests 'disrupting the disruption.' The whiteboard is full. The markers are dry. What framework best captures this ideation?",
+      choices: [
+        "The Double Diamond of Disintermediation",
+        "A 2x2 matrix where both axes are 'innovation'",
+        "Just add it to the parking lot and never speak of it again",
+        "Pivot the whiteboard 90 degrees and call it a new perspective"
+      ],
+      correct: 1,
+      successMsg: "🧠 Incredible thought leadership! You've blue-sky'd beyond the stratosphere. That's what we call a 10x ideation event!",
+      failMsg: "Let's not boil the ocean here. That idea needs more runway before it achieves escape velocity."
+    },
+    // Room 3: Mermaid's Standup
+    {
+      emoji: "🧜‍♀️",
+      text: "The mermaids are running the daily standup. One reports she's 'blocked by dependencies from the deep.' Another says she'll 'continue to iterate on the coral reef.' What's the scrum master's correct response?",
+      choices: [
+        "'Let's take the deep dependencies offline'",
+        "'Can we get a JIRA ticket for the reef iteration?'",
+        "'Is anyone else feeling a lack of psychological safety in this lagoon?'",
+        "'Great energy team, let's keep it under 15 minutes'"
+      ],
+      correct: 3,
+      successMsg: "🏄 You've surfaced the actionable insights! Agile methodology has never been this wet. Way to keep the ceremony tight!",
+      failMsg: "That's introducing friction into the sprint velocity. The mermaids are NOT impressed."
+    },
+    // Room 4: Serpent of Scope Creep
+    {
+      emoji: "🐍",
+      text: "The sea serpent of scope creep has added 47 new requirements to your MVP. It now includes a blockchain, an AI chatbot, and 'vibes.' The original ask was a login page. What do you do?",
+      choices: [
+        "Embrace it — this is what 'yes, and' culture looks like",
+        "Document everything in a PRD that nobody will read",
+        "Declare it a 'Phase 2 opportunity' and push it to Q7",
+        "Rename the project so it sounds like it was always this big"
+      ],
+      correct: 2,
+      successMsg: "📋 Masterful scope governance! You've contained the serpent with nothing but a roadmap and bureaucratic inertia. That's a Phase 1 win!",
+      failMsg: "The serpent just added 12 more requirements while you were answering. You need sharper prioritization frameworks."
+    },
+    // Room 5: Kraken of KPIs
+    {
+      emoji: "🦑",
+      text: "The Kraken of KPIs demands you 'move the needle' on eight metrics simultaneously. Three of them contradict each other. One is measured in 'vibes per quarter.' How do you proceed?",
+      choices: [
+        "Build a dashboard so complex it achieves sentience",
+        "Redefine 'needle' until all metrics look green",
+        "Present a waterfall chart that actually looks like a waterfall because you're crying",
+        "Measure vibes per quarter using Net Promoter Score divided by feelings"
+      ],
+      correct: 1,
+      successMsg: "📊 You've operationalized the metrics into a north star constellation! The Kraken respects your data storytelling. Synergy hydrated!",
+      failMsg: "The Kraken is not satisfied with your throughput narrative. Your OKRs need OKR-ing."
+    },
+    // Room 6: Pirate Bay of Disruption
+    {
+      emoji: "🏴‍☠️",
+      text: "The pirates of disruption have stolen your market share using a product that's just your product but with rounded corners. Their pitch deck says 'we're Uber, but for boats.' How do you respond?",
+      choices: [
+        "Launch a counter-disruption: 'We're Airbnb, but for boats (different boats)'",
+        "Acquire them for 10x revenue and shut them down",
+        "File a patent for 'corners' and litigate",
+        "Add AI to your product name and watch the stock price triple"
+      ],
+      correct: 3,
+      successMsg: "🚀 DISRUPTION DISRUPTED! You've achieved product-market fit by simply adding two letters to your brand. The pirates are furious. The board is thrilled!",
+      failMsg: "The pirates just pivoted again. They're now 'Uber for Boats, but AI.' You've been outflanked."
+    },
+    // Room 7: Neptune's Boardroom
+    {
+      emoji: "🔱",
+      text: "Neptune, the ultimate stakeholder, demands to know the ROI on the entire ocean. His trident glows menacingly. The board is watching. Your slide deck has 847 slides. Which slide do you go to?",
+      choices: [
+        "Slide 1: 'Our Vision' (a stock photo of a sunrise)",
+        "Slide 420: 'The Synergy Waterfall' (it's actually a pie chart)",
+        "Slide 847: 'Next Steps' which just says 'TBD'",
+        "Skip the deck entirely and say 'I'll let the numbers speak for themselves' while gesturing vaguely at the sea"
+      ],
+      correct: 3,
+      successMsg: "🔱 NEPTUNE IS IMPRESSED! Your executive presence transcended the need for data. You've achieved the mythical state of 'thought leadership without thoughts.' Way to pivot!",
+      failMsg: "Neptune has sent you to Slide 0: the unemployment ocean. Your stakeholder management needs work."
+    },
+    // Room 8: Whirlpool of Pivot
+    {
+      emoji: "🌀",
+      text: "You're caught in the Whirlpool of Pivot. The company has pivoted 6 times this quarter. You started as a fintech, became a medtech, briefly were a dog-walking app, and are now 'a platform.' What is the company?",
+      choices: [
+        "A tax write-off with a ping pong table",
+        "An AI-powered blockchain for synergistic Web3 solutions",
+        "Whatever the last VC meeting suggested",
+        "Nobody knows, but the swag looks great"
+      ],
+      correct: 2,
+      successMsg: "🌀 You've navigated the pivot vortex! Understanding that vision follows funding is TRUE thought leadership. Your paradigm is fully hydrated!",
+      failMsg: "We've pivoted again while you were thinking. The answer was different 30 seconds ago."
+    },
+    // Room 9: C-Suite Shores
+    {
+      emoji: "🏛️",
+      text: "You've reached the C-Suite Shores. To claim your corner office, complete this sentence: 'At the end of the day, it's all about ______.'",
+      choices: [
+        "Delivering value to our stakeholders through cross-functional alignment of mission-critical deliverables",
+        "People (but we mean shareholders)",
+        "The journey (which we will monetize)",
+        "All of the above, spoken with a straight face during an all-hands while someone is definitely muted"
+      ],
+      correct: 3,
+      successMsg: "👔 YOU'VE REACHED THE C-SUITE! Your synergies are overflowing. Your paradigms are fully shifted. Your bandwidth is infinite. You are the innovation!",
+      failMsg: "So close! But the C-Suite requires maximum corporate omniscience."
+    },
+  ];
+
+  const successPhrases = [
+    "Way to pivot!", "Paradigm hydrated!", "Synergies aligned!", "Core competency unlocked!",
+    "Bandwidth maximized!", "Thought leadership achieved!", "You've moved the needle!",
+    "Circle complete!", "Stakeholder impressed!", "Blue-sky thinking!", "10x energy!",
+    "OKRs crushed!", "Runway extended!", "North star located!", "Value delivered!",
+  ];
+
+  const failPhrases = [
+    "Let's circle back.", "Let's take this offline.", "Not quite aligned.", "Needs more runway.",
+    "The needle didn't move.", "Stakeholder unconvinced.", "Paradigm unshifted.",
+    "That's a growth opportunity.", "Let's parking-lot that.", "Low-hanging fruit missed.",
+  ];
+
+  const tips = [
+    "Tip: Think outside the box. Then put the box on a boat.",
+    "Tip: Every problem is an opportunity wearing a disguise and a lanyard.",
+    "Tip: If you don't know the answer, say 'Let's take that offline.'",
+    "Tip: Synergy is just friendship with a PowerPoint.",
+    "Tip: The real blockchain was the meetings we had along the way.",
+    "Tip: When in doubt, add 'AI' to the sentence.",
+    "Tip: A pivot is just falling over but calling it strategy.",
+    "Tip: Core competency means you can do at least one thing.",
+    "Tip: The ocean doesn't have sprints. Be like the ocean.",
+    "Tip: If the Kraken asks for KPIs, present them upside down.",
+  ];
+
+  // ===========================
+  // STATE
+  // ===========================
+  let currentRoom = 0;
+  let score = 0;
+  let shifts = 0;
+  let answered = false;
+  let canProceed = false;
+
+  // Canvas
+  const sceneCanvas = document.getElementById('sceneCanvas');
+  const sctx = sceneCanvas.getContext('2d');
+  let cW = 0, cH = 0;
+  let animFrame = 0;
+
+  function resizeCanvas() {
+    const panel = sceneCanvas.parentElement;
+    cW = sceneCanvas.width = panel.clientWidth;
+    cH = sceneCanvas.height = panel.clientHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+
+  // ===========================
+  // TITLE SCREEN
+  // ===========================
+  document.getElementById('titleScreen').addEventListener('click', () => {
+    const ts = document.getElementById('titleScreen');
+    ts.classList.add('gone');
+    document.getElementById('gameScreen').classList.add('active');
+    resizeCanvas();
+    loadRoom(0);
+    requestAnimationFrame(renderLoop);
+  });
+
+  // ===========================
+  // ROOM LOADING
+  // ===========================
+  function loadRoom(idx) {
+    currentRoom = idx;
+    answered = false;
+    canProceed = false;
+
+    document.getElementById('roomNum').textContent = idx + 1;
+    document.getElementById('roomLabel').textContent = rooms[idx].name;
+    document.getElementById('bottomHint').textContent = tips[idx % tips.length];
+
+    // Question
+    const q = questions[idx];
+    document.getElementById('qHeader').textContent = `⬡ ROOM ${idx + 1}: CHALLENGE ⬡`;
+    document.getElementById('qText').innerHTML = `<span class="emoji">${q.emoji}</span>${q.text}`;
+
+    const choicesEl = document.getElementById('qChoices');
+    choicesEl.innerHTML = '';
+    q.choices.forEach((choice, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'q-choice';
+      btn.textContent = `${String.fromCharCode(65 + i)}) ${choice}`;
+      btn.addEventListener('click', () => handleAnswer(i));
+      choicesEl.appendChild(btn);
+    });
+
+    document.getElementById('qFeedback').className = 'q-feedback';
+    document.getElementById('qFeedback').textContent = '';
+    document.getElementById('proceedBtn').className = 'proceed-btn';
+
+    // Navigation doors
+    updateDoors();
+  }
+
+  function handleAnswer(choiceIdx) {
+    if (answered) return;
+    answered = true;
+
+    const q = questions[currentRoom];
+    const choices = document.querySelectorAll('.q-choice');
+    const feedback = document.getElementById('qFeedback');
+    const proceed = document.getElementById('proceedBtn');
+
+    choices.forEach((btn, i) => {
+      if (i === q.correct) btn.classList.add('correct');
+      else if (i === choiceIdx && i !== q.correct) btn.classList.add('wrong');
+      btn.classList.add('disabled');
+    });
+
+    if (choiceIdx === q.correct) {
+      score += 100;
+      shifts++;
+      const bonus = successPhrases[Math.floor(Math.random() * successPhrases.length)];
+      feedback.className = 'q-feedback success show';
+      feedback.textContent = q.successMsg + ` (${bonus} +100 Synergies!)`;
+      canProceed = true;
+      playCorrectSound();
+    } else {
+      score += 25; // participation trophy
+      const consolation = failPhrases[Math.floor(Math.random() * failPhrases.length)];
+      feedback.className = 'q-feedback fail show';
+      feedback.textContent = q.failMsg + ` (${consolation} +25 Participation Synergies)`;
+      canProceed = true; // still let them proceed (mercy)
+      playWrongSound();
+    }
+
+    document.getElementById('scoreNum').textContent = score;
+    document.getElementById('shiftNum').textContent = shifts;
+
+    if (currentRoom < rooms.length - 1) {
+      proceed.className = 'proceed-btn show';
+      proceed.onclick = () => loadRoom(currentRoom + 1);
+    } else {
+      proceed.className = 'proceed-btn show';
+      proceed.textContent = '🏛️ ENTER THE C-SUITE 🏛️';
+      proceed.onclick = showVictory;
+    }
+
+    updateDoors();
+  }
+
+  function updateDoors() {
+    const doorsEl = document.getElementById('navDoors');
+    doorsEl.innerHTML = '';
+
+    // Show contextual doors
+    if (currentRoom > 0) {
+      const backBtn = document.createElement('button');
+      backBtn.className = 'door-btn';
+      backBtn.innerHTML = '◀ Aft';
+      backBtn.addEventListener('click', () => loadRoom(currentRoom - 1));
+      doorsEl.appendChild(backBtn);
+    }
+
+    const fwdBtn = document.createElement('button');
+    fwdBtn.className = 'door-btn' + (canProceed ? '' : ' locked');
+    fwdBtn.innerHTML = currentRoom < rooms.length - 1 ? 'Fore ▶' : '🏛️ C-Suite';
+    if (canProceed) {
+      fwdBtn.addEventListener('click', () => {
+        if (currentRoom < rooms.length - 1) loadRoom(currentRoom + 1);
+        else showVictory();
+      });
+    }
+    doorsEl.appendChild(fwdBtn);
+  }
+
+  function showVictory() {
+    const overlay = document.getElementById('victoryOverlay');
+    const text = document.getElementById('victoryText');
+    text.innerHTML = `
+      Congratulations, <em>Chief Synergy Officer</em>.<br><br>
+      You've navigated ${rooms.length} rooms of corporate waters, accumulated <em>${score} Synergies</em>,
+      and shifted <em>${shifts} Paradigms</em>.<br><br>
+      Your corner office overlooks the Sea of Stakeholder Value.
+      The mini-fridge is stocked with cold brew and KPIs.
+      Your LinkedIn title now reads: <em>"Disruptive Thought Captain — Navigating Innovation Oceans"</em>.<br><br>
+      The real treasure was the meetings we had along the way. ⚓
+    `;
+    overlay.classList.add('active');
+  }
+
+  // ===========================
+  // AUDIO
+  // ===========================
+  let audioCtx = null;
+  function ensureAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
+  function playCorrectSound() {
+    ensureAudio();
+    [440, 554, 659].forEach((f, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = f;
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.12 + 0.3);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + i * 0.12);
+      osc.stop(audioCtx.currentTime + i * 0.12 + 0.3);
+    });
+  }
+  function playWrongSound() {
+    ensureAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.4);
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+  }
+
+  // ===========================
+  // SCENE RENDERING
+  // ===========================
+  function renderLoop() {
+    animFrame++;
+    drawScene(rooms[currentRoom].scene);
+    requestAnimationFrame(renderLoop);
+  }
+
+  function drawScene(sceneType) {
+    const W = cW, H = cH;
+    if (W === 0 || H === 0) return;
+
+    // Sky
+    const skyGrad = sctx.createLinearGradient(0, 0, 0, H * 0.5);
+    skyGrad.addColorStop(0, '#0a0c2e');
+    skyGrad.addColorStop(0.5, '#1a2455');
+    skyGrad.addColorStop(1, '#2a3a6a');
+    sctx.fillStyle = skyGrad;
+    sctx.fillRect(0, 0, W, H * 0.55);
+
+    // Stars
+    const seed = 777;
+    for (let i = 0; i < 40; i++) {
+      const sx = ((seed * (i+1) * 7) % W);
+      const sy = ((seed * (i+1) * 13) % (H * 0.35));
+      const twinkle = 0.3 + 0.5 * Math.sin(animFrame * 0.03 + i * 2);
+      sctx.fillStyle = `rgba(255,255,200,${twinkle})`;
+      sctx.fillRect(sx, sy, 1.5, 1.5);
+    }
+
+    // Moon
+    sctx.fillStyle = 'rgba(255,240,200,0.12)';
+    sctx.beginPath();
+    sctx.arc(W * 0.8, H * 0.12, 40, 0, Math.PI * 2);
+    sctx.fill();
+    sctx.fillStyle = 'rgba(255,245,210,0.8)';
+    sctx.beginPath();
+    sctx.arc(W * 0.8, H * 0.12, 22, 0, Math.PI * 2);
+    sctx.fill();
+
+    // Ocean
+    const seaY = H * 0.5;
+    const seaGrad = sctx.createLinearGradient(0, seaY, 0, H);
+    seaGrad.addColorStop(0, '#0f2847');
+    seaGrad.addColorStop(0.5, '#0a1e3d');
+    seaGrad.addColorStop(1, '#050e1e');
+    sctx.fillStyle = seaGrad;
+    sctx.fillRect(0, seaY, W, H - seaY);
+
+    // Waves
+    for (let layer = 0; layer < 4; layer++) {
+      const waveY = seaY + layer * 15;
+      const amp = 4 + layer * 2;
+      const freq = 0.008 - layer * 0.001;
+      const speed = (animFrame * (0.3 + layer * 0.1));
+      const alpha = 0.08 - layer * 0.015;
+      sctx.strokeStyle = `rgba(100,180,255,${alpha})`;
+      sctx.lineWidth = 1;
+      sctx.beginPath();
+      for (let x = 0; x <= W; x += 3) {
+        const y = waveY + Math.sin(x * freq + speed * 0.02) * amp + Math.sin(x * freq * 2.3 + speed * 0.015) * amp * 0.5;
+        x === 0 ? sctx.moveTo(x, y) : sctx.lineTo(x, y);
+      }
+      sctx.stroke();
+    }
+
+    // Scene-specific elements
+    switch(sceneType) {
+      case 'harbor': drawHarbor(W, H, seaY); break;
+      case 'twoships': drawTwoShips(W, H, seaY); break;
+      case 'island': drawIsland(W, H, seaY); break;
+      case 'mermaids': drawMermaids(W, H, seaY); break;
+      case 'serpent': drawSerpent(W, H, seaY); break;
+      case 'kraken': drawKraken(W, H, seaY); break;
+      case 'pirates': drawPirates(W, H, seaY); break;
+      case 'neptune': drawNeptune(W, H, seaY); break;
+      case 'whirlpool': drawWhirlpool(W, H, seaY); break;
+      case 'csuite': drawCSuite(W, H, seaY); break;
+    }
+  }
+
+  // Common ship drawing
+  function drawShip(x, y, scale, flip) {
+    sctx.save();
+    sctx.translate(x, y);
+    sctx.scale(scale * (flip ? -1 : 1), scale);
+
+    // Hull bob
+    const bob = Math.sin(animFrame * 0.02) * 3;
+    sctx.translate(0, bob);
+    const rock = Math.sin(animFrame * 0.015) * 0.03;
+    sctx.rotate(rock);
+
+    // Hull
+    sctx.fillStyle = '#5c3a1e';
+    sctx.beginPath();
+    sctx.moveTo(-60, 0);
+    sctx.lineTo(-70, -15);
+    sctx.lineTo(70, -15);
+    sctx.lineTo(80, 0);
+    sctx.quadraticCurveTo(0, 15, -60, 0);
+    sctx.fill();
+    sctx.strokeStyle = '#3a2210';
+    sctx.lineWidth = 1.5;
+    sctx.stroke();
+
+    // Hull stripe
+    sctx.fillStyle = '#c9a84c';
+    sctx.fillRect(-55, -10, 120, 3);
+
+    // Mast
+    sctx.fillStyle = '#3a2210';
+    sctx.fillRect(-3, -90, 6, 80);
+
+    // Sail
+    sctx.fillStyle = '#f0e6c8';
+    const sailBillow = Math.sin(animFrame * 0.02) * 5;
+    sctx.beginPath();
+    sctx.moveTo(5, -85);
+    sctx.quadraticCurveTo(50 + sailBillow, -55, 5, -20);
+    sctx.lineTo(5, -85);
+    sctx.fill();
+    sctx.strokeStyle = 'rgba(0,0,0,0.2)';
+    sctx.lineWidth = 0.5;
+    sctx.stroke();
+
+    // Flag
+    sctx.fillStyle = '#c9a84c';
+    sctx.beginPath();
+    sctx.moveTo(0, -90);
+    sctx.lineTo(20 + Math.sin(animFrame * 0.04) * 3, -95);
+    sctx.lineTo(0, -100);
+    sctx.fill();
+
+    sctx.restore();
+  }
+
+  // ---- SCENE DRAWINGS ----
+
+  function drawHarbor(W, H, seaY) {
+    // Dock
+    sctx.fillStyle = '#5c3a1e';
+    sctx.fillRect(0, seaY - 10, W * 0.15, 25);
+    for (let p = 0; p < 3; p++) {
+      sctx.fillStyle = '#3a2210';
+      sctx.fillRect(W * 0.03 + p * W * 0.05, seaY - 10, 6, 50);
+    }
+    // Lanterns
+    for (let l = 0; l < 3; l++) {
+      const lx = W * 0.04 + l * W * 0.05;
+      const glow = 0.3 + 0.2 * Math.sin(animFrame * 0.05 + l);
+      sctx.fillStyle = `rgba(255,200,50,${glow})`;
+      sctx.beginPath();
+      sctx.arc(lx, seaY - 18, 5, 0, Math.PI * 2);
+      sctx.fill();
+    }
+    // Ship
+    drawShip(W * 0.45, seaY, 1.2, false);
+    // Distant lighthouse
+    sctx.fillStyle = '#aaa';
+    sctx.fillRect(W * 0.85, seaY - 60, 8, 55);
+    sctx.fillStyle = '#cc3333';
+    sctx.fillRect(W * 0.85, seaY - 60, 8, 12);
+    const beamAlpha = 0.15 + 0.1 * Math.sin(animFrame * 0.03);
+    sctx.fillStyle = `rgba(255,255,150,${beamAlpha})`;
+    sctx.beginPath();
+    sctx.arc(W * 0.854, seaY - 65, 12, 0, Math.PI * 2);
+    sctx.fill();
+  }
+
+  function drawTwoShips(W, H, seaY) {
+    drawShip(W * 0.3, seaY + 10, 1.0, false);
+    drawShip(W * 0.7, seaY + 5, 1.1, true);
+    // "Synergy" beams between them
+    const beamAlpha = 0.2 + 0.15 * Math.sin(animFrame * 0.04);
+    sctx.strokeStyle = `rgba(201,168,76,${beamAlpha})`;
+    sctx.lineWidth = 1;
+    sctx.setLineDash([4, 6]);
+    sctx.beginPath();
+    sctx.moveTo(W * 0.38, seaY - 30);
+    sctx.lineTo(W * 0.62, seaY - 35);
+    sctx.stroke();
+    sctx.beginPath();
+    sctx.moveTo(W * 0.36, seaY - 10);
+    sctx.lineTo(W * 0.64, seaY - 15);
+    sctx.stroke();
+    sctx.setLineDash([]);
+    // Label
+    sctx.fillStyle = `rgba(201,168,76,${beamAlpha + 0.1})`;
+    sctx.font = '10px "IM Fell English SC", serif';
+    sctx.textAlign = 'center';
+    sctx.fillText('~ s y n e r g y ~', W * 0.5, seaY - 40);
+  }
+
+  function drawIsland(W, H, seaY) {
+    drawShip(W * 0.2, seaY + 10, 0.9, false);
+    // Island
+    sctx.fillStyle = '#3a6a2a';
+    sctx.beginPath();
+    sctx.ellipse(W * 0.65, seaY + 5, 120, 40, 0, Math.PI, 0);
+    sctx.fill();
+    sctx.fillStyle = '#c9a84c';
+    sctx.beginPath();
+    sctx.ellipse(W * 0.65, seaY + 5, 125, 12, 0, 0, Math.PI);
+    sctx.fill();
+    // Palm tree
+    sctx.fillStyle = '#5c3a1e';
+    sctx.fillRect(W * 0.64, seaY - 60, 5, 55);
+    // Leaves
+    for (let l = 0; l < 5; l++) {
+      const angle = -Math.PI * 0.8 + l * Math.PI * 0.4 + Math.sin(animFrame * 0.02) * 0.05;
+      sctx.strokeStyle = '#2a8a2a';
+      sctx.lineWidth = 3;
+      sctx.beginPath();
+      sctx.moveTo(W * 0.645, seaY - 58);
+      sctx.quadraticCurveTo(
+        W * 0.645 + Math.cos(angle) * 25, seaY - 58 + Math.sin(angle) * 15,
+        W * 0.645 + Math.cos(angle) * 40, seaY - 48 + Math.sin(angle) * 25
+      );
+      sctx.stroke();
+    }
+    // Whiteboard on island
+    sctx.fillStyle = '#fff';
+    sctx.fillRect(W * 0.72, seaY - 35, 25, 18);
+    sctx.strokeStyle = '#333';
+    sctx.lineWidth = 1;
+    sctx.strokeRect(W * 0.72, seaY - 35, 25, 18);
+    sctx.fillStyle = '#c33';
+    sctx.font = '5px monospace';
+    sctx.fillText('IDEAS', W * 0.725, seaY - 25);
+  }
+
+  function drawMermaids(W, H, seaY) {
+    drawShip(W * 0.5, seaY + 5, 1.0, false);
+    // Draw 3 mermaids
+    for (let m = 0; m < 3; m++) {
+      const mx = W * 0.15 + m * W * 0.28;
+      const my = seaY + 20 + Math.sin(animFrame * 0.025 + m * 2) * 8;
+      sctx.save();
+      sctx.translate(mx, my);
+      // Tail
+      sctx.fillStyle = ['#2aa876', '#a855f7', '#3b82f6'][m];
+      sctx.beginPath();
+      sctx.moveTo(0, 10);
+      sctx.quadraticCurveTo(15, 25, 5, 35);
+      sctx.quadraticCurveTo(12, 30, 18, 38);
+      sctx.quadraticCurveTo(5, 32, -5, 35);
+      sctx.quadraticCurveTo(-15, 25, 0, 10);
+      sctx.fill();
+      // Body
+      sctx.fillStyle = '#f0c8a0';
+      sctx.beginPath();
+      sctx.ellipse(0, 0, 8, 14, 0, 0, Math.PI * 2);
+      sctx.fill();
+      // Hair
+      sctx.fillStyle = ['#c9a84c', '#8b4513', '#1a1a1a'][m];
+      sctx.beginPath();
+      sctx.arc(0, -10, 9, 0, Math.PI * 2);
+      sctx.fill();
+      // Face
+      sctx.fillStyle = '#f0c8a0';
+      sctx.beginPath();
+      sctx.arc(0, -8, 7, 0, Math.PI * 2);
+      sctx.fill();
+      // Eyes
+      sctx.fillStyle = '#333';
+      sctx.fillRect(-3, -9, 2, 2);
+      sctx.fillRect(2, -9, 2, 2);
+      // Laptop
+      sctx.fillStyle = '#333';
+      sctx.fillRect(-8, -2, 16, 10);
+      sctx.fillStyle = '#4488cc';
+      sctx.fillRect(-7, -1, 14, 8);
+      sctx.restore();
+    }
+    // "STANDUP" text
+    sctx.fillStyle = 'rgba(201,168,76,0.3)';
+    sctx.font = '9px "Courier Prime", monospace';
+    sctx.textAlign = 'center';
+    sctx.fillText('📋 DAILY STANDUP IN PROGRESS', W * 0.5, seaY + 70);
+  }
+
+  function drawSerpent(W, H, seaY) {
+    drawShip(W * 0.2, seaY + 10, 0.8, false);
+    // Sea serpent - sine wave body
+    sctx.strokeStyle = '#2a8a4a';
+    sctx.lineWidth = 14;
+    sctx.lineCap = 'round';
+    sctx.beginPath();
+    for (let i = 0; i <= 40; i++) {
+      const t = i / 40;
+      const sx = W * 0.35 + t * W * 0.5;
+      const sy = seaY - 20 + Math.sin(t * Math.PI * 3 + animFrame * 0.03) * 30;
+      i === 0 ? sctx.moveTo(sx, sy) : sctx.lineTo(sx, sy);
+    }
+    sctx.stroke();
+    // Scales
+    sctx.strokeStyle = '#1a6a3a';
+    sctx.lineWidth = 8;
+    sctx.beginPath();
+    for (let i = 0; i <= 40; i++) {
+      const t = i / 40;
+      const sx = W * 0.35 + t * W * 0.5;
+      const sy = seaY - 20 + Math.sin(t * Math.PI * 3 + animFrame * 0.03) * 30;
+      i === 0 ? sctx.moveTo(sx, sy) : sctx.lineTo(sx, sy);
+    }
+    sctx.stroke();
+    // Head
+    const headX = W * 0.85;
+    const headY = seaY - 20 + Math.sin(3 * Math.PI + animFrame * 0.03) * 30;
+    sctx.fillStyle = '#2a8a4a';
+    sctx.beginPath();
+    sctx.arc(headX, headY, 14, 0, Math.PI * 2);
+    sctx.fill();
+    // Eye
+    sctx.fillStyle = '#ff4444';
+    sctx.beginPath();
+    sctx.arc(headX + 6, headY - 4, 4, 0, Math.PI * 2);
+    sctx.fill();
+    sctx.fillStyle = '#000';
+    sctx.beginPath();
+    sctx.arc(headX + 7, headY - 4, 2, 0, Math.PI * 2);
+    sctx.fill();
+    // Label
+    sctx.fillStyle = 'rgba(255,100,100,0.4)';
+    sctx.font = '8px "Courier Prime", monospace';
+    sctx.textAlign = 'center';
+    sctx.fillText('SCOPE CREEP: +47 REQUIREMENTS', W * 0.6, seaY + 50);
+  }
+
+  function drawKraken(W, H, seaY) {
+    drawShip(W * 0.5, seaY, 0.9, false);
+    // Kraken tentacles
+    sctx.strokeStyle = '#6a2fa0';
+    sctx.lineWidth = 6;
+    sctx.lineCap = 'round';
+    for (let t = 0; t < 8; t++) {
+      const angle = (t / 8) * Math.PI * 2 + animFrame * 0.005;
+      const startX = W * 0.5;
+      const startY = seaY + 40;
+      sctx.beginPath();
+      sctx.moveTo(startX, startY);
+      for (let s = 1; s <= 12; s++) {
+        const seg = s / 12;
+        const reach = 60 + t * 15;
+        const sx = startX + Math.cos(angle + Math.sin(animFrame * 0.02 + t) * 0.5) * reach * seg;
+        const sy = startY + Math.sin(angle + Math.cos(animFrame * 0.015 + t * 0.7) * 0.4) * reach * seg * 0.6 + seg * 30;
+        sctx.lineTo(sx, sy);
+      }
+      sctx.stroke();
+      // Sucker
+      const endX = startX + Math.cos(angle + Math.sin(animFrame * 0.02 + t) * 0.5) * (60 + t * 15);
+      const endY = startY + Math.sin(angle + Math.cos(animFrame * 0.015 + t * 0.7) * 0.4) * (60 + t * 15) * 0.6 + 30;
+      sctx.fillStyle = '#8a4ac0';
+      sctx.beginPath();
+      sctx.arc(endX, endY, 4, 0, Math.PI * 2);
+      sctx.fill();
+    }
+    // Kraken head
+    sctx.fillStyle = '#5a1a90';
+    sctx.beginPath();
+    sctx.ellipse(W * 0.5, seaY + 30, 25, 20, 0, 0, Math.PI * 2);
+    sctx.fill();
+    // Eyes
+    sctx.fillStyle = '#ffcc00';
+    sctx.beginPath();
+    sctx.arc(W * 0.49, seaY + 25, 5, 0, Math.PI * 2);
+    sctx.fill();
+    sctx.beginPath();
+    sctx.arc(W * 0.52, seaY + 25, 5, 0, Math.PI * 2);
+    sctx.fill();
+    sctx.fillStyle = '#000';
+    sctx.beginPath();
+    sctx.arc(W * 0.49, seaY + 25, 2.5, 0, Math.PI * 2);
+    sctx.fill();
+    sctx.beginPath();
+    sctx.arc(W * 0.52, seaY + 25, 2.5, 0, Math.PI * 2);
+    sctx.fill();
+    // KPI labels on tentacles
+    const kpis = ['NPS', 'ARR', 'CAC', 'LTV', 'MRR', 'DAU', 'GMV', 'VIBES'];
+    kpis.forEach((kpi, i) => {
+      const angle = (i / 8) * Math.PI * 2 + animFrame * 0.005;
+      const kx = W * 0.5 + Math.cos(angle) * (40 + i * 8);
+      const ky = seaY + 40 + Math.sin(angle) * (30 + i * 5) + 15;
+      sctx.fillStyle = 'rgba(201,168,76,0.5)';
+      sctx.font = '7px "Courier Prime", monospace';
+      sctx.textAlign = 'center';
+      sctx.fillText(kpi, kx, ky);
+    });
+  }
+
+  function drawPirates(W, H, seaY) {
+    drawShip(W * 0.25, seaY + 5, 0.8, false);
+    // Pirate ship
+    sctx.save();
+    sctx.translate(W * 0.7, seaY + Math.sin(animFrame * 0.02) * 4);
+    sctx.rotate(Math.sin(animFrame * 0.015) * 0.03);
+    // Hull - black
+    sctx.fillStyle = '#1a1a1a';
+    sctx.beginPath();
+    sctx.moveTo(-70, 0);
+    sctx.lineTo(-80, -15);
+    sctx.lineTo(80, -15);
+    sctx.lineTo(90, 0);
+    sctx.quadraticCurveTo(0, 15, -70, 0);
+    sctx.fill();
+    // Mast
+    sctx.fillStyle = '#2a2a2a';
+    sctx.fillRect(-3, -100, 6, 85);
+    // Jolly Roger sail
+    sctx.fillStyle = '#111';
+    const pb = Math.sin(animFrame * 0.02) * 5;
+    sctx.beginPath();
+    sctx.moveTo(5, -95);
+    sctx.quadraticCurveTo(55 + pb, -60, 5, -25);
+    sctx.fill();
+    // Skull
+    sctx.fillStyle = '#fff';
+    sctx.beginPath();
+    sctx.arc(25, -58, 8, 0, Math.PI * 2);
+    sctx.fill();
+    sctx.fillStyle = '#111';
+    sctx.fillRect(21, -61, 3, 3);
+    sctx.fillRect(26, -61, 3, 3);
+    // Crossbones
+    sctx.strokeStyle = '#fff';
+    sctx.lineWidth = 2;
+    sctx.beginPath(); sctx.moveTo(16, -48); sctx.lineTo(34, -68); sctx.stroke();
+    sctx.beginPath(); sctx.moveTo(34, -48); sctx.lineTo(16, -68); sctx.stroke();
+    sctx.restore();
+    // "DISRUPTION" flag
+    sctx.fillStyle = 'rgba(255,50,50,0.4)';
+    sctx.font = '8px "Courier Prime", monospace';
+    sctx.textAlign = 'center';
+    sctx.fillText('⚠ DISRUPTORS AHEAD ⚠', W * 0.7, seaY + 55);
+  }
+
+  function drawNeptune(W, H, seaY) {
+    drawShip(W * 0.2, seaY + 10, 0.7, false);
+    // Neptune rising from sea
+    const ny = seaY - 10 + Math.sin(animFrame * 0.015) * 5;
+    sctx.save();
+    sctx.translate(W * 0.6, ny);
+    // Body
+    sctx.fillStyle = '#2aa876';
+    sctx.beginPath();
+    sctx.ellipse(0, 20, 30, 40, 0, 0, Math.PI);
+    sctx.fill();
+    // Torso
+    sctx.fillStyle = '#c0a080';
+    sctx.beginPath();
+    sctx.ellipse(0, -10, 20, 30, 0, Math.PI, 0);
+    sctx.fill();
+    // Head
+    sctx.fillStyle = '#d0b090';
+    sctx.beginPath();
+    sctx.arc(0, -38, 16, 0, Math.PI * 2);
+    sctx.fill();
+    // Beard
+    sctx.fillStyle = '#aaa';
+    sctx.beginPath();
+    sctx.moveTo(-12, -30);
+    sctx.quadraticCurveTo(-18, -10, -10, 5);
+    sctx.lineTo(10, 5);
+    sctx.quadraticCurveTo(18, -10, 12, -30);
+    sctx.fill();
+    // Crown
+    sctx.fillStyle = '#c9a84c';
+    sctx.beginPath();
+    sctx.moveTo(-14, -50);
+    sctx.lineTo(-10, -60);
+    sctx.lineTo(-5, -52);
+    sctx.lineTo(0, -62);
+    sctx.lineTo(5, -52);
+    sctx.lineTo(10, -60);
+    sctx.lineTo(14, -50);
+    sctx.closePath();
+    sctx.fill();
+    // Trident
+    sctx.strokeStyle = '#c9a84c';
+    sctx.lineWidth = 3;
+    sctx.beginPath();
+    sctx.moveTo(35, -20);
+    sctx.lineTo(35, -80);
+    sctx.stroke();
+    // Prongs
+    sctx.beginPath();
+    sctx.moveTo(25, -75); sctx.lineTo(25, -90); sctx.stroke();
+    sctx.beginPath();
+    sctx.moveTo(35, -80); sctx.lineTo(35, -95); sctx.stroke();
+    sctx.beginPath();
+    sctx.moveTo(45, -75); sctx.lineTo(45, -90); sctx.stroke();
+    // Eyes
+    sctx.fillStyle = '#3b82f6';
+    sctx.beginPath();
+    sctx.arc(-5, -40, 3, 0, Math.PI * 2);
+    sctx.fill();
+    sctx.beginPath();
+    sctx.arc(5, -40, 3, 0, Math.PI * 2);
+    sctx.fill();
+    sctx.restore();
+    // Label
+    sctx.fillStyle = 'rgba(201,168,76,0.4)';
+    sctx.font = '9px "Courier Prime", monospace';
+    sctx.textAlign = 'center';
+    sctx.fillText('🔱 THE ULTIMATE STAKEHOLDER', W * 0.6, seaY + 65);
+  }
+
+  function drawWhirlpool(W, H, seaY) {
+    drawShip(W * 0.25, seaY + 5, 0.7, false);
+    // Whirlpool
+    const wpx = W * 0.6;
+    const wpy = seaY + 30;
+    for (let r = 0; r < 8; r++) {
+      const radius = 15 + r * 12;
+      const alpha = 0.15 - r * 0.015;
+      sctx.strokeStyle = `rgba(100,180,255,${alpha})`;
+      sctx.lineWidth = 2;
+      sctx.beginPath();
+      sctx.arc(wpx, wpy, radius, animFrame * 0.02 + r * 0.3, animFrame * 0.02 + r * 0.3 + Math.PI * 1.5);
+      sctx.stroke();
+    }
+    // Spinning words
+    const pivots = ['PIVOT', 'ITERATE', 'REALIGN', 'REBRAND', 'DISRUPT', 'SCALE'];
+    pivots.forEach((word, i) => {
+      const angle = (i / pivots.length) * Math.PI * 2 + animFrame * 0.015;
+      const r = 50 + i * 12;
+      const wx = wpx + Math.cos(angle) * r;
+      const wy = wpy + Math.sin(angle) * r * 0.5;
+      sctx.fillStyle = `rgba(201,168,76,${0.3 + 0.1 * Math.sin(animFrame * 0.03 + i)})`;
+      sctx.font = '8px "Courier Prime", monospace';
+      sctx.textAlign = 'center';
+      sctx.fillText(word, wx, wy);
+    });
+  }
+
+  function drawCSuite(W, H, seaY) {
+    drawShip(W * 0.3, seaY + 5, 1.0, false);
+    // Shore with building
+    sctx.fillStyle = '#c9a84c';
+    sctx.beginPath();
+    sctx.moveTo(W * 0.55, seaY + 15);
+    sctx.quadraticCurveTo(W * 0.75, seaY - 10, W, seaY + 5);
+    sctx.lineTo(W, seaY + 60);
+    sctx.lineTo(W * 0.55, seaY + 60);
+    sctx.fill();
+    // Grass
+    sctx.fillStyle = '#3a6a2a';
+    sctx.beginPath();
+    sctx.moveTo(W * 0.57, seaY + 10);
+    sctx.quadraticCurveTo(W * 0.76, seaY - 15, W, seaY);
+    sctx.lineTo(W, seaY + 15);
+    sctx.lineTo(W * 0.55, seaY + 18);
+    sctx.fill();
+    // Office building
+    const bx = W * 0.72;
+    const by = seaY - 70;
+    sctx.fillStyle = '#556';
+    sctx.fillRect(bx, by, 60, 75);
+    sctx.fillStyle = '#334';
+    sctx.fillRect(bx + 2, by + 2, 56, 71);
+    // Windows
+    for (let row = 0; row < 6; row++) {
+      for (let col = 0; col < 4; col++) {
+        const lit = Math.sin(animFrame * 0.01 + row + col * 3) > 0;
+        sctx.fillStyle = lit ? 'rgba(255,220,100,0.7)' : 'rgba(50,50,80,0.5)';
+        sctx.fillRect(bx + 6 + col * 13, by + 6 + row * 11, 9, 7);
+      }
+    }
+    // Corner office glow (top right)
+    sctx.fillStyle = 'rgba(255,200,50,0.9)';
+    sctx.fillRect(bx + 45, by + 6, 9, 7);
+    const glow = sctx.createRadialGradient(bx + 50, by + 10, 2, bx + 50, by + 10, 20);
+    glow.addColorStop(0, 'rgba(255,200,50,0.2)');
+    glow.addColorStop(1, 'transparent');
+    sctx.fillStyle = glow;
+    sctx.fillRect(bx + 30, by - 10, 40, 40);
+    // Flag
+    sctx.fillStyle = '#c9a84c';
+    sctx.fillRect(bx + 28, by - 20, 3, 20);
+    sctx.fillStyle = '#c9a84c';
+    sctx.beginPath();
+    sctx.moveTo(bx + 31, by - 20);
+    sctx.lineTo(bx + 48, by - 15);
+    sctx.lineTo(bx + 31, by - 10);
+    sctx.fill();
+    // Label
+    sctx.fillStyle = 'rgba(201,168,76,0.5)';
+    sctx.font = '8px "Courier Prime", monospace';
+    sctx.textAlign = 'center';
+    sctx.fillText('🏛️ THE CORNER OFFICE AWAITS', W * 0.78, seaY + 50);
+  }
+
+})();
+</script>
+</body>
+</html>
